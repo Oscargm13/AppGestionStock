@@ -1,8 +1,17 @@
-﻿namespace AppGestionStock.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+
+namespace AppGestionStock.Models
 {
+    [Table("ManagersTiendas")]
+    [PrimaryKey(nameof(IdUsuario), nameof(IdTienda))]
     public class ManagerTienda
     {
+        [ForeignKey("IdUsuario")]
         public int IdUsuario { get; set; }
+
+        [ForeignKey("IdTienda")]
         public int IdTienda { get; set; }
 
         public Usuario Usuario { get; set; }

@@ -1,9 +1,21 @@
-﻿namespace AppGestionStock.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace AppGestionStock.Models
 {
+    [Table("Categorias")]
     public class Categoria
     {
+        [Key]
+        [Column("IdCategoria")]
         public int IdCategoria { get; set; }
+
+        [Required(ErrorMessage = "El nombre es obligatorio")]
+        [StringLength(100, ErrorMessage = "El nombre no puede tener más de 100 caracteres")]
+        [Column("Nombre")]
         public string Nombre { get; set; }
+
+        [Column("IdCategoriaPadre")]
         public int? IdCategoriaPadre { get; set; }
 
         public Categoria CategoriaPadre { get; set; }

@@ -1,18 +1,43 @@
-﻿namespace AppGestionStock.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace AppGestionStock.Models
 {
+    [Table("Productos")]
     public class Producto
     {
+        [Key]
+        [Column("IdProducto")]
         public int IdProducto { get; set; }
-        public string Nombre { get; set; }
-        public decimal Precio { get; set; }
-        public int Stock { get; set; }
-        public decimal Coste { get; set; }
-        public int IdCategoria { get; set; }
-        public string Imagen { get; set; } // Nueva propiedad para la imagen
 
+        [Required(ErrorMessage = "El nombre es obligatorio")]
+        [StringLength(100, ErrorMessage = "El nombre no puede tener más de 100 caracteres")]
+        [Column("Nombre")]
+        public string Nombre { get; set; }
+
+        [Required(ErrorMessage = "El precio es obligatorio")]
+        [Column("Precio")]
+        public decimal Precio { get; set; }
+
+        [Required(ErrorMessage = "El coste es obligatorio")]
+        [Column("Coste")]
+        public decimal Coste { get; set; }
+
+        [Required(ErrorMessage = "La categoría es obligatoria")]
+        [Column("IdCategoria")]
+        public int IdCategoria { get; set; }
+
+        [StringLength(100, ErrorMessage = "La ruta de la imagen no puede tener más de 100 caracteres")]
+        [Column("Imagen")]
+        public string Imagen { get; set; }
+
+        [ForeignKey("IdCategoria")]
         public Categoria Categoria { get; set; }
+
         public ICollection<DetallesVenta> DetallesVentas { get; set; }
         public ICollection<DetallesCompra> DetallesCompras { get; set; }
         public ICollection<ProductoProveedor> ProductosProveedores { get; set; }
+
+        public ICollection<ProductosTienda> ProductosTiendas { get; set; }
     }
 }

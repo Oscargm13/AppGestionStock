@@ -1,7 +1,16 @@
+using AppGestionStock.Data;
+using AppGestionStock.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<RepositoryClientes>();
+builder.Services.AddTransient<RepositoyProductos>();
+string connectionString = builder.Configuration.GetConnectionString("SqlAlmacenes");
+builder.Services.AddDbContext<AlmacenesContext>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
