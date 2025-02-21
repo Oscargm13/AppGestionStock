@@ -1,15 +1,24 @@
 ﻿using AppGestionStock.Data;
 using AppGestionStock.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace AppGestionStock.Repositories
 {
     public class RepositoyProductos
     {
+        SqlConnection cn;
+        SqlCommand com;
+        SqlDataReader reader;
+
         private AlmacenesContext context;
         public RepositoyProductos(AlmacenesContext context)
         {
             this.context = context;
+            this.cn = new SqlConnection();
+            this.com = new SqlCommand();
+            this.com.Connection = this.cn;
         }
 
         public List<Producto> GetProductos()
@@ -60,6 +69,31 @@ namespace AppGestionStock.Repositories
                            where productos.IdCategoria == idCategoria
                            select productos;
             return consulta.ToList();
+        }
+
+        public void CrearProducto(string nombre, decimal precio, decimal coste, int idCategoria, string imagen)
+        {
+            Producto nuevoProducto = new Producto
+            {
+                Nombre = nombre,
+                Precio = precio,
+                Coste = coste,
+                IdCategoria = idCategoria,
+                Imagen = imagen
+            };
+
+            this.context.Productos.Add(nuevoProducto);
+            this.context.SaveChanges();
+        }
+
+        public void EliminarProducto(int idProducto)
+        {
+            Producto productoAEliminar = this.context.Productos.Find(idProducto);
+            if (productoAEliminar != null)
+            {
+                this.context.Productos.Remove(productoAEliminar);
+                this.context.SaveChanges();
+            }
         }
     }
 }

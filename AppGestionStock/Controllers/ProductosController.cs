@@ -43,5 +43,28 @@ namespace AppGestionStock.Controllers
             List<VistaProductosGerente> productos = this.repo.GetProductosGerente(idUsuario);
             return View(productos);
         }
+
+        public IActionResult CrearProducto()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CrearProducto(string nombre, decimal precio, decimal coste, int idCategoria, string imagen)
+        {
+            if (ModelState.IsValid)
+            {
+                this.repo.CrearProducto(nombre, precio, coste, idCategoria, imagen);
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult EliminarProducto(int idProducto)
+        {
+            this.repo.EliminarProducto(idProducto);
+            return RedirectToAction("Index");
+        }
     }
 }
