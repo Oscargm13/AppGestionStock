@@ -17,6 +17,12 @@ namespace AppGestionStock.Controllers
             List<Producto> productos = this.repo.GetProductos();
             return View(productos);
         }
+        [HttpPost]
+        public IActionResult Index(int idTienda)
+        {
+            List<VistaProductoTienda> productos = this.repo.GetProductosTienda(idTienda);
+            return View(productos);
+        }
 
         public IActionResult ProductosTienda()
         {

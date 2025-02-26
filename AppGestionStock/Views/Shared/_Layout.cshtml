@@ -3,57 +3,131 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AppGestionStock</title>
-    <script type="importmap"></script>
+    <title>Dashboard - AppGestionStock</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AppGestionStock.styles.css" asp-append-version="true" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        .navbar {
+            background-color: antiquewhite;
+            height: 80px; /* Más alto */
+        }
+
+        .sidebar {
+            height: calc(100vh - 80px); /* Ajustado para que no se pise */
+            position: fixed;
+            top: 80px; /* Evita que sea tapado por la barra superior */
+            left: 0;
+            width: 250px;
+            background: #343a40;
+            color: white;
+            padding-top: 20px;
+        }
+
+        .right-panel {
+            position: fixed;
+            right: 0;
+            top: 80px; /* Ajuste para alinearlo con la barra */
+            width: 300px; /* Más ancho */
+            height: calc(100vh - 80px); /* Ajustado */
+            background: #f8f9fa;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-right: 300px; /* Evita solapamiento con el panel derecho */
+            margin-top: 80px; /* Ajuste para evitar ser tapado */
+            padding: 20px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .sidebar a {
+            color: white;
+            padding: 10px 20px;
+            display: block;
+            text-decoration: none;
+        }
+
+            .sidebar a:hover {
+                background: #495057;
+            }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+            .user-info img {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AppGestionStock</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Clientes" asp-action="Index">Clientes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Productos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="ProductosTienda">Productos tienda 1</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+    <!-- Barra superior -->
+    <nav class="navbar navbar-light bg-light px-3 fixed-top w-100">
+        <button class="btn btn-outline-secondary">⬅</button>
+        <span class="h5 mx-auto">Tienda Central</span>
+        <div class="user-info">
+            <img src="~/images/barto.jpg" alt="Usuario" />
+            <span>Juan Pérez</span>
+        </div>
+    </nav>
+
+    <div class="d-flex">
+        <!-- Menú lateral izquierdo -->
+        <nav class="sidebar">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a href="#">Dashboard</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#productosMenu" role="button">Productos ▼</a>
+                    <div class="collapse" id="productosMenu">
+                        <a class="nav-link text-white ps-4" asp-controller="Productos" asp-action="ProductosTienda">Ver productos tienda 1</a>
+                        <a href="#" class="nav-link text-white ps-4">Agregar producto</a>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="#">Clientes</a></li>
+                <li class="nav-item"><a href="#">Inventario</a></li>
+                <li class="nav-item"><a href="#">Reportes</a></li>
+            </ul>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+        <!-- Contenido principal -->
+        <main class="main-content w-100">
             @RenderBody()
         </main>
+
+        <!-- Panel derecho -->
+        <aside class="right-panel">
+            <h6 class="text-center">Movimientos Recientes</h6>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <p class="card-text">Entrada: 50 unidades de Producto A.</p>
+                </div>
+            </div>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <p class="card-text">Salida: 20 unidades de Producto B.</p>
+                </div>
+            </div>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <p class="card-text">Stock actualizado: Producto C.</p>
+                </div>
+            </div>
+        </aside>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - AppGestionStock - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
