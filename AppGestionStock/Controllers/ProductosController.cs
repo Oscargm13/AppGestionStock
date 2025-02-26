@@ -67,10 +67,21 @@ namespace AppGestionStock.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public IActionResult EliminarProducto(int idProducto)
+        public async Task<IActionResult> UpdateProducto(int idProducto)
         {
-            this.repo.EliminarProducto(idProducto);
+            Producto producto = await this.repo.FindProductoAsync(idProducto);
+            return View(producto);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProducto(int idProducto, string nombre, decimal precio, decimal coste, int idCategoria, string imagen)
+        {
+            await this.repo.UpdateProductoAsync(idProducto, nombre, precio, coste, idCategoria, imagen);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> EliminarProducto(int idProducto)
+        {
+            await this.repo.EliminarProducto(idProducto);
             return RedirectToAction("Index");
         }
     }

@@ -38,12 +38,20 @@ namespace AppGestionStock.Repositories
             return consulta.ToList();
         }
 
-        public VistaProductoTienda FindProducto(int idProducto, int idTienda)
+        public VistaProductoTienda FindProductoTienda(int idProducto, int idTienda)
         {
             var consulta = (from datos in this.context.VistaProductosTienda
                             where datos.IdProducto == idProducto && datos.IdTienda == idTienda
                             select datos).FirstOrDefault();
             return consulta;
+        }
+
+        public async Task<Producto> FindProductoAsync(int idProducto)
+        {
+            var consulta = (from datos in this.context.Productos
+                            where datos.IdProducto == idProducto
+                            select datos);
+            return await consulta.FirstOrDefaultAsync();
         }
 
         public List<VistaProductosGerente> FindProductoManager(int idProducto, int idUsuarioGerente)
@@ -95,14 +103,43 @@ namespace AppGestionStock.Repositories
             this.context.SaveChanges();
         }
 
-        public void EliminarProducto(int idProducto)
+        public async Task UpdateProductoAsync(int idProducto, string nombreProducto, decimal precio, decimal coste, int idCategoria, string imagen)
         {
-            Producto productoAEliminar = this.context.Productos.Find(idProducto);
-            if (productoAEliminar != null)
+            try
             {
-                this.context.Productos.Remove(productoAEliminar);
-                this.context.SaveChanges();
+                Producto productoExistente = await this.context.Productos.FindAsync(idProducto);
+
+                if (productoExistente != null)
+                {
+                    productoExistente.Nombre = nombreProducto;
+                    productoExistente.Precio = precio;
+                    productoExistente.Coste = coste;
+                    productoExistente.IdCategoria = idCategoria;
+                    productoExistente.Imagen = imagen;
+
+                    this.context.Productos.Update(productoExistente);
+                    await this.context.SaveChangesAsync();
+                }
+                else
+                {
+                    // Manejar el caso en que el producto no existe
+                    throw new Exception($"No se encontró el producto con ID {idProducto}");
+                }
             }
+            catch (Exception ex)
+            {
+                // Manejar el error (por ejemplo, registrarlo, lanzar una excepción personalizada)
+                Console.WriteLine($"Error al actualizar el producto: {ex.Message}");
+                throw; // Re-lanzar la excepción para que el controlador pueda manejarla
+            }
+        }
+
+        public async Task EliminarProducto(int idProducto)
+        {
+            Producto productoAEliminar = await this.context.Productos.FindAsync(idProducto);
+            
+            this.context.Productos.Remove(productoAEliminar);
+            await this.context.SaveChangesAsync();
         }
 
         public async Task<List<Categoria>> GetCategoriasAsync()

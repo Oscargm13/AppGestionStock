@@ -20,9 +20,9 @@
                         <strong>Categoría:</strong> @item.IdCategoria
                     </p>
                     <div class="d-flex justify-content-between">
-                        <a asp-action="Edit" asp-route-id="@item.IdProducto" class="btn btn-sm btn-primary">Editar</a>
+                        <a asp-action="UpdateProducto" asp-route-idProducto="@item.IdProducto" class="btn btn-sm btn-primary">Editar</a>
                         <a asp-action="Details" asp-route-id="@item.IdProducto" class="btn btn-sm btn-info">Detalles</a>
-                        <a asp-action="Delete" asp-route-id="@item.IdProducto" class="btn btn-sm btn-danger">Eliminar</a>
+                        <a asp-action="EliminarProducto" asp-route-idProducto="@item.IdProducto" class="btn btn-sm btn-danger">Eliminar</a>
                     </div>
                 </div>
             </div>
