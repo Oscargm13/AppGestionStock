@@ -10,8 +10,7 @@ namespace AppGestionStock.Models
         [Column("IdProducto")]
         public int IdProducto { get; set; }
 
-        [Required(ErrorMessage = "El nombre es obligatorio")]
-        [StringLength(100, ErrorMessage = "El nombre no puede tener más de 100 caracteres")]
+        [Required(ErrorMessage = "El nombre es obligatorio")] // Agrega el atributo Required
         [Column("Nombre")]
         public string Nombre { get; set; }
 

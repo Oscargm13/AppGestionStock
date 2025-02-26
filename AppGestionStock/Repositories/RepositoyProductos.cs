@@ -8,17 +8,10 @@ namespace AppGestionStock.Repositories
 {
     public class RepositoyProductos
     {
-        SqlConnection cn;
-        SqlCommand com;
-        SqlDataReader reader;
-
         private AlmacenesContext context;
         public RepositoyProductos(AlmacenesContext context)
         {
             this.context = context;
-            this.cn = new SqlConnection();
-            this.com = new SqlCommand();
-            this.com.Connection = this.cn;
         }
 
         public List<Producto> GetProductos()
@@ -71,14 +64,30 @@ namespace AppGestionStock.Repositories
             return consulta.ToList();
         }
 
-        public void CrearProducto(string nombre, decimal precio, decimal coste, int idCategoria, string imagen)
+        public void CrearProducto(string nombreProducto, decimal precio, decimal coste, string nombreCategoria, int? idCategoriaPadre, string imagen)
         {
+            // 1. Crear o encontrar la categoría
+            Categoria categoria = this.context.Categorias.FirstOrDefault(c => c.Nombre == nombreCategoria);
+
+            if (categoria == null)
+            {
+                categoria = new Categoria
+                {
+                    Nombre = nombreCategoria,
+                    IdCategoriaPadre = idCategoriaPadre
+                };
+
+                this.context.Categorias.Add(categoria);
+                this.context.SaveChanges();
+            }
+
+            // 2. Crear el producto
             Producto nuevoProducto = new Producto
             {
-                Nombre = nombre,
+                Nombre = nombreProducto,
                 Precio = precio,
                 Coste = coste,
-                IdCategoria = idCategoria,
+                IdCategoria = categoria.IdCategoria,
                 Imagen = imagen
             };
 
@@ -95,5 +104,11 @@ namespace AppGestionStock.Repositories
                 this.context.SaveChanges();
             }
         }
+
+        public async Task<List<Categoria>> GetCategoriasAsync()
+        {
+            var consulta = from datos in this.context.Categorias select datos;
+            return await consulta.ToListAsync();
+        } 
     }
 }

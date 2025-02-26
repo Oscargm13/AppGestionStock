@@ -50,20 +50,21 @@ namespace AppGestionStock.Controllers
             return View(productos);
         }
 
-        public IActionResult CrearProducto()
+        public async Task<IActionResult> CrearProducto()
         {
+            List<Categoria> categorias = await this.repo.GetCategoriasAsync();
+            ViewData["CATEGORIAS"] = categorias;
             return View();
         }
 
         [HttpPost]
-        public IActionResult CrearProducto(string nombre, decimal precio, decimal coste, int idCategoria, string imagen)
+        public async Task<IActionResult> CrearProducto(string nombre, decimal precio, decimal coste, string nombreCategoria, int? idCategoriaPadre, string imagen)
         {
-            if (ModelState.IsValid)
-            {
-                this.repo.CrearProducto(nombre, precio, coste, idCategoria, imagen);
-                return RedirectToAction("Index");
-            }
-            return View();
+            List<Categoria> categorias = await this.repo.GetCategoriasAsync();
+            ViewData["CATEGORIAS"] = categorias;
+            
+            this.repo.CrearProducto(nombre, precio, coste, nombreCategoria, idCategoriaPadre, imagen);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

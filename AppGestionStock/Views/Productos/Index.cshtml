@@ -4,59 +4,28 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-center">Lista de Productos</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Coste)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdCategoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Imagen)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Coste)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdCategoria)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Imagen)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="~/images/Productos/@item.Imagen" class="card-img-top" alt="@item.Nombre" style="max-height: 200px; object-fit: contain;">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nombre</h5>
+                    <p class="card-text">
+                        <strong>Precio:</strong> @item.Precio<br />
+                        <strong>Coste:</strong> @item.Coste<br />
+                        <strong>Categoría:</strong> @item.IdCategoria
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Edit" asp-route-id="@item.IdProducto" class="btn btn-sm btn-primary">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.IdProducto" class="btn btn-sm btn-info">Detalles</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdProducto" class="btn btn-sm btn-danger">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

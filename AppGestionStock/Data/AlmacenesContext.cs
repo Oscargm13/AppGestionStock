@@ -18,5 +18,8 @@ namespace AppGestionStock.Data
 
         //MODELS TIENDA
         public DbSet<Tienda> Tiendas { get; set; }
+
+        //MODELS CATEGORIAS
+        public DbSet<Categoria> Categorias { get; set; }
     }
 }

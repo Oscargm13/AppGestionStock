@@ -18,7 +18,9 @@ namespace AppGestionStock.Models
         [Column("IdCategoriaPadre")]
         public int? IdCategoriaPadre { get; set; }
 
+        [ForeignKey("IdCategoriaPadre")] // Especifica la clave foránea
         public Categoria CategoriaPadre { get; set; }
+
         public ICollection<Categoria> CategoriasHijas { get; set; }
     }
 }
