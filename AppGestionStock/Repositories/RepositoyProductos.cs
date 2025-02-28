@@ -20,11 +20,22 @@ namespace AppGestionStock.Repositories
             return consulta.ToList();
         }
         
-        public List<VistaProductoTienda> GetProductosTienda(int idTienda)
+        public List<VistaProductoTienda> GetVistaProductosTienda(int idTienda)
         {
             var consulta = from datos in this.context.VistaProductosTienda
                            where datos.IdTienda == idTienda
                            select datos;
+            return consulta.ToList();
+        }
+
+        public List<ProductosTienda> GetProductosTiendaGerente(int idGerente)
+        {
+            var consulta = from pt in this.context.ProductosTienda
+                           join t in this.context.Tiendas on pt.IdTienda equals t.IdTienda
+                           join mt in this.context.ManagerTiendas on t.IdTienda equals mt.IdTienda
+                           where mt.IdUsuario == idGerente
+                           select pt;
+
             return consulta.ToList();
         }
 

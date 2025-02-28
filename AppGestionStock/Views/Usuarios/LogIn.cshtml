@@ -1,0 +1,20 @@
+﻿@model List<AppGestionStock.Models.Rol>
+
+<link rel="stylesheet" href="~/css/estilosLogIn.css/">
+
+<div class="login-container">
+    <div class="login-form">
+        <h2>Registro de Usuario</h2>
+        <form asp-action="LogIn" method="post">
+            <div>
+                <label for="nombre">Nombre de usuario:</label>
+                <input type="text" name="nombre" id="nombre" />
+            </div>
+            <div>
+                <label for="pass">Contraseña:</label>
+                <input type="password" name="pass" id="pass" />
+            </div>
+            <button type="submit">Acceder</button>
+        </form>
+    </div>
+</div>

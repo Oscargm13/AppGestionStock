@@ -20,7 +20,7 @@ namespace AppGestionStock.Controllers
         [HttpPost]
         public IActionResult Index(int idTienda)
         {
-            List<VistaProductoTienda> productos = this.repo.GetProductosTienda(idTienda);
+            List<VistaProductoTienda> productos = this.repo.GetVistaProductosTienda(idTienda);
             return View(productos);
         }
 
@@ -33,7 +33,7 @@ namespace AppGestionStock.Controllers
         [HttpPost]
         public IActionResult ProductosTienda(int idTienda)
         {
-            List<VistaProductoTienda> productos = this.repo.GetProductosTienda(idTienda);
+            List<VistaProductoTienda> productos = this.repo.GetVistaProductosTienda(idTienda);
             return View(productos);
         }
 

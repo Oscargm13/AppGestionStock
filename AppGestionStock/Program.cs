@@ -6,9 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 
 builder.Services.AddTransient<RepositoryClientes>();
 builder.Services.AddTransient<RepositoyProductos>();
+builder.Services.AddTransient<RepositoryUsuario>();
 string connectionString = builder.Configuration.GetConnectionString("SqlAlmacenes");
 builder.Services.AddDbContext<AlmacenesContext>(options => options.UseSqlServer(connectionString));
 
@@ -28,7 +31,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")

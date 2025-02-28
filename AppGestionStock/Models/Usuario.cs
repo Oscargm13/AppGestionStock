@@ -29,10 +29,12 @@ namespace AppGestionStock.Models
         [Column("Imagen")]
         public string Imagen { get; set; }
 
+        
         [Required(ErrorMessage = "El rol es obligatorio")]
         [Column("IdRol")]
         public int IdRol { get; set; }
 
+        [ForeignKey("IdRol")]
         public Rol Rol { get; set; }
     }
 }

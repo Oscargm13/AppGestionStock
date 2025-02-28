@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using AppGestionStock.Models;
+using AppGestionStock.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppGestionStock.Controllers
@@ -7,14 +8,18 @@ namespace AppGestionStock.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private RepositoyProductos repoProductos;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, RepositoyProductos repoProductos)
         {
             _logger = logger;
+            this.repoProductos = repoProductos;
         }
 
         public IActionResult Index()
         {
+            //List<ProductosTienda> productosTienda = repoProductos.GetProductosTienda();
+            //ViewData["STOCKTOTAL"] = 
             return View();
         }
 

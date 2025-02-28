@@ -70,7 +70,10 @@ namespace AppGestionStock.Models
         [ForeignKey("IdProveedor")]
         public int IdProveedor { get; set; }
 
-        [Column("NombreProveedor")]
-        public string NombreProveedor { get; set; }
+        [Column("NombreEmpresa")]
+        public string NombreEmpresa { get; set; }
+
+        [Column("NombreEmpresaGerente")]
+        public string NombreEmpresaGerente { get; set; }
     }
 }

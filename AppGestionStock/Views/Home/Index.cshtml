@@ -1,9 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@{
+    string nombreUsuario = Context.Session.GetObject<string>("USUARIO");
+}
+@model ProductosTienda
 
-<!-- Contenido principal -->
 <div class="container">
+    <h1>El id del usuario en session es el: @nombreUsuario</h1>
     <div class="row justify-content-center">
         <div class="col-md-4">
             <div class="card">

@@ -21,5 +21,11 @@ namespace AppGestionStock.Data
 
         //MODELS CATEGORIAS
         public DbSet<Categoria> Categorias { get; set; }
+
+        //MODELS ROLES
+        public DbSet<Rol> Roles { get; set; }
+
+        //MODELS USUARIOS
+        public DbSet<Usuario> Usuarios { get; set; }
     }
 }
