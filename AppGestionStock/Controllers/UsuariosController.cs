@@ -28,7 +28,7 @@ namespace AppGestionStock.Controllers
             {
                 HttpContext.Session.SetObject("USUARIO", usuario.Nombre);
                 HttpContext.Session.SetObject("EMAIL", usuario.Email);
-                HttpContext.Session.SetObject("ID", usuario.IdUsuario);
+                HttpContext.Session.SetObject("IDUSUARIO", usuario.IdUsuario);
                 
                 return RedirectToAction("Index", "Home");
             }

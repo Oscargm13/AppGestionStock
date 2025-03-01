@@ -1,4 +1,5 @@
 using AppGestionStock.Data;
+using AppGestionStock.Middlewares;
 using AppGestionStock.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,21 +22,20 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles(); // Movemos UseStaticFiles aquí
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
 app.UseSession();
+app.UseMiddleware<AuthenticationMiddleware>();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Usuarios}/{action=LogIn}/{id?}")
+    .WithStaticAssets(); // sobra
 
 app.Run();
