@@ -34,9 +34,8 @@ namespace AppGestionStock.Models
         [Column("IdRol")]
         public int IdRol { get; set; }
 
-        //[Required(ErrorMessage = "La empresa es obligatoria")]
-        //[Column("nombre_empresa")]
-        //public string nombreEmpresa { get; set; }
+        [Column("nombre_empresa")]
+        public string nombreEmpresa { get; set; }
 
         [ForeignKey("IdRol")]
         public Rol Rol { get; set; }

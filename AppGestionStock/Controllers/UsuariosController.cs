@@ -36,5 +36,15 @@ namespace AppGestionStock.Controllers
             ViewData["MensajeError"] = "Nombre de usuario o contraseña incorrectos.";
             return View();
         }
+
+        public async Task<IActionResult> LogOut()
+        {
+            if(HttpContext.Session.GetObject<Usuario>("USUARIO") != null)
+            {
+                HttpContext.Session.Remove("USUARIO");
+            }
+
+            return RedirectToAction("LogIn", "Usuarios");
+        }
     }
 }

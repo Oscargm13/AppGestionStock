@@ -134,7 +134,7 @@
     {
         <nav class="navbar navbar-light bg-light px-3 fixed-top w-100">
             <button class="btn btn-outline-secondary">⬅</button>
-            <span class="h5 mx-auto">@* @usuario.nombreEmpresa *@</span>
+            <span class="h5 mx-auto">@usuario.nombreEmpresa</span>
             <div class="user-info">
                 <img src="~/images/usuarios/@usuario.Imagen" alt="Usuario" />
                 <span>@usuario.Nombre</span>
@@ -164,8 +164,8 @@
                     <li class="nav-item"><a href="#"><i data-lucide="clipboard"></i> Inventario</a></li>
                     <li class="nav-item"><a href="#"><i data-lucide="bar-chart"></i> Reportes</a></li>
                     <li>
-                        <a class="nav-link text-white" asp-controller="Usuarios" asp-action="LogIn">
-                            <i data-lucide="user"></i> Log In
+                        <a class="nav-link text-white" asp-controller="Usuarios" asp-action="LogOut">
+                            <i data-lucide="user"></i> Log out
                         </a>
                     </li>
                 </ul>
