@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using AppGestionStock.Models;
 using AppGestionStock.Repositories;
-using AppGestionStock.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppGestionStock.Controllers

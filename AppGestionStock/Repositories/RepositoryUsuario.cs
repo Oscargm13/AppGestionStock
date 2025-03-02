@@ -63,5 +63,19 @@ namespace AppGestionStock.Repositories
             }
             return null;
         }
+
+        public async Task<Usuario> findUsuario(int idUsuario)
+        {
+            try
+            {
+                var usuario = await this.context.Usuarios.FirstOrDefaultAsync(u => u.IdUsuario == idUsuario);
+                return usuario;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al buscar usuario: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

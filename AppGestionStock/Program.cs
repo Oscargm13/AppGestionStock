@@ -35,7 +35,7 @@ app.UseSession();
 app.UseMiddleware<AuthenticationMiddleware>();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Usuarios}/{action=LogIn}/{id?}")
+    pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets(); // sobra
 
 app.Run();

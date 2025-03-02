@@ -17,7 +17,8 @@ SELECT
     pt.Cantidad AS StockTienda,
     mt.IdUsuario AS IdGerente,
     prov.IdProveedor,
-    prov.NombreEmpresa
+    prov.NombreEmpresa,
+    u.nombre_empresa AS NombreEmpresaGerente -- Agregamos el nombre de empresa del usuario
 FROM
     Productos p
 JOIN
@@ -29,7 +30,10 @@ JOIN
 LEFT JOIN
     ProductosProveedores pp ON p.IdProducto = pp.IdProducto
 LEFT JOIN
-    Proveedores prov ON pp.IdProveedor = prov.IdProveedor;*/
+    Proveedores prov ON pp.IdProveedor = prov.IdProveedor
+JOIN
+    Usuarios u ON mt.IdUsuario = u.IdUsuario; -- Unimos con la tabla Usuarios
+*/
 #endregion
 namespace AppGestionStock.Models
 {

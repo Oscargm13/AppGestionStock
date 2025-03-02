@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Usuario? usuario = Context.Session.GetObject<Usuario>("USUARIO");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -126,66 +130,71 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-light bg-light px-3 fixed-top w-100">
-        <button class="btn btn-outline-secondary">⬅</button>
-        <span class="h5 mx-auto">Tienda Central</span>
-        <div class="user-info">
-            <img src="~/images/barto.jpg" alt="Usuario" />
-            <span>Juan Pérez</span>
-        </div>
-    </nav>
-
-    <div class="d-flex">
-        <nav class="sidebar">
-            <ul class="nav flex-column">
-                <li class="nav-item"><a href="#"><i data-lucide="home"></i> <span>Dashboard</span></a></li>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-toggle="collapse" href="#productosMenu" role="button">
-                        <i data-lucide="package"></i> Productos
-                    </a>
-                    <div class="collapse" id="productosMenu">
-                        <a class="nav-link text-white" asp-controller="Productos" asp-action="ProductosTienda">
-                            <i data-lucide="store"></i> Ver productos tienda 1
-                        </a>
-                        <a href="#" class="nav-link text-white">
-                            <i data-lucide="plus-circle"></i> Agregar producto
-                        </a>
-                    </div>
-                </li>
-                <li class="nav-item"><a href="#"><i data-lucide="users"></i> Clientes</a></li>
-                <li class="nav-item"><a href="#"><i data-lucide="clipboard"></i> Inventario</a></li>
-                <li class="nav-item"><a href="#"><i data-lucide="bar-chart"></i> Reportes</a></li>
-                <li>
-                    <a class="nav-link text-white" asp-controller="Usuarios" asp-action="LogIn">
-                        <i data-lucide="user"></i> Log In
-                    </a>
-                </li>
-                
-            </ul>
+    @if (usuario != null)
+    {
+        <nav class="navbar navbar-light bg-light px-3 fixed-top w-100">
+            <button class="btn btn-outline-secondary">⬅</button>
+            <span class="h5 mx-auto">@* @usuario.nombreEmpresa *@</span>
+            <div class="user-info">
+                <img src="~/images/usuarios/@usuario.Imagen" alt="Usuario" />
+                <span>@usuario.Nombre</span>
+            </div>
         </nav>
-
+    }
+    <div class="d-flex">
+        @if (usuario != null)
+        {
+            <nav class="sidebar">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a href="#"><i data-lucide="home"></i> <span>Dashboard</span></a></li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#productosMenu" role="button">
+                            <i data-lucide="package"></i> Productos
+                        </a>
+                        <div class="collapse" id="productosMenu">
+                            <a class="nav-link text-white" asp-controller="Productos" asp-action="ProductosTienda">
+                                <i data-lucide="store"></i> Ver productos tienda 1
+                            </a>
+                            <a href="#" class="nav-link text-white">
+                                <i data-lucide="plus-circle"></i> Agregar producto
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a href="#"><i data-lucide="users"></i> Clientes</a></li>
+                    <li class="nav-item"><a href="#"><i data-lucide="clipboard"></i> Inventario</a></li>
+                    <li class="nav-item"><a href="#"><i data-lucide="bar-chart"></i> Reportes</a></li>
+                    <li>
+                        <a class="nav-link text-white" asp-controller="Usuarios" asp-action="LogIn">
+                            <i data-lucide="user"></i> Log In
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
         <main class="main-content w-100">
             @RenderBody()
         </main>
-
-        <aside class="right-panel">
-            <h6 class="text-center">Movimientos Recientes</h6>
-            <div class="card mb-2">
-                <div class="card-body">
-                    <p class="card-text">Entrada: 50 unidades de Producto A.</p>
+        @if (usuario != null)
+        {
+            <aside class="right-panel">
+                <h6 class="text-center">Movimientos Recientes</h6>
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p class="card-text">Entrada: 50 unidades de Producto A.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="card mb-2">
-                <div class="card-body">
-                    <p class="card-text">Salida: 20 unidades de Producto B.</p>
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p class="card-text">Salida: 20 unidades de Producto B.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="card mb-2">
-                <div class="card-body">
-                    <p class="card-text">Stock actualizado: Producto C.</p>
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p class="card-text">Stock actualizado: Producto C.</p>
+                    </div>
                 </div>
-            </div>
-        </aside>
+            </aside>
+        }
     </div>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

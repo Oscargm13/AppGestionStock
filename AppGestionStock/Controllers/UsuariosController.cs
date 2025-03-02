@@ -26,7 +26,7 @@ namespace AppGestionStock.Controllers
 
             if (usuario != null)
             {
-                HttpContext.Session.SetObject("USUARIO", usuario.Nombre);
+                HttpContext.Session.SetObject("USUARIO", usuario);
                 HttpContext.Session.SetObject("EMAIL", usuario.Email);
                 HttpContext.Session.SetObject("IDUSUARIO", usuario.IdUsuario);
                 
