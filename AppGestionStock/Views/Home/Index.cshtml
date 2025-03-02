@@ -29,5 +29,37 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="miGraficoCircular"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    fetch('/api/Graficos/datosCircular')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => item.label);
+            const valores = data.map(item => item.valor);
+
+            const ctx = document.getElementById('miGraficoCircular').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: valores,
+                        backgroundColor: [
+                            'red',
+                            'blue',
+                            'green'
+                        ]
+                    }]
+                }
+            });
+        });
+</script>
