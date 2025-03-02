@@ -1,0 +1,14 @@
+﻿
+@media (max-width: 1290px) {
+    .container .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .container .col-md-4 {
+        flex: 1 1 calc(50% - 20px);
+        /*max-width: calc(50%);*/
+        margin-bottom: 10px;
+    }
+}

@@ -10,130 +10,14 @@
     <title>Dashboard - AppGestionStock</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/estilosLayout.css" asp-append-version="true" />
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-        }
-
-        .navbar {
-            background-color: #f8f9fa;
-            height: 80px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar {
-            height: calc(100vh - 80px);
-            position: fixed;
-            top: 80px;
-            left: 0;
-            width: 320px;
-            background: #212529;
-            color: white;
-            padding-top: 20px;
-            font-size: 1.2rem;
-        }
-
-            .sidebar a {
-                color: white;
-                padding: 15px 20px;
-                display: flex;
-                align-items: center;
-                text-decoration: none;
-                transition: background 0.3s;
-                font-size: 1.3rem;
-            }
-
-                .sidebar a svg {
-                    margin-right: 15px;
-                }
-
-                .sidebar a i {
-                    margin-right: 15px;
-                    font-size: 1.5rem;
-                }
-
-                .sidebar a:hover {
-                    background: #343a40;
-                }
-
-        .nav-link[data-bs-toggle="collapse"]::after {
-            content: '\25BE';
-            margin-left: auto;
-            font-size: 1.4rem;
-            transition: transform 0.3s;
-        }
-
-        .nav-link[data-bs-toggle="collapse"].collapsed::after {
-            transform: rotate(-90deg);
-        }
-
-        .collapse {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            display: none;
-        }
-
-            .collapse.show {
-                max-height: 500px;
-                display: block;
-            }
-
-            .collapse .nav-link {
-                font-size: 1.1rem;
-                padding-left: 40px;
-                opacity: 0;
-                transform: translateY(-5px);
-                transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-            }
-
-            .collapse.show .nav-link {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-        .main-content {
-            margin-left: 280px;
-            margin-right: 300px;
-            margin-top: 80px;
-            padding: 20px;
-            height: calc(100vh - 80px);
-            overflow-y: auto;
-        }
-
-        .right-panel {
-            position: fixed;
-            right: 0;
-            top: 80px;
-            width: 300px;
-            height: calc(100vh - 80px);
-            background: #f8f9fa;
-            padding: 15px;
-            overflow-y: auto;
-            border-left: 1px solid #dee2e6;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
-
-            .user-info img {
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-                margin-right: 10px;
-            }
-    </style>
-
 </head>
 <body>
     @if (usuario != null)
     {
         <nav class="navbar navbar-light bg-light px-3 fixed-top w-100">
-            <button class="btn btn-outline-secondary">⬅</button>
+            <h4>SynchroStock</h4>
             <span class="h5 mx-auto">@usuario.nombreEmpresa</span>
             <div class="user-info">
                 <img src="~/images/usuarios/@usuario.Imagen" alt="Usuario" />
@@ -171,9 +55,10 @@
                 </ul>
             </nav>
         }
-        <main class="main-content w-100">
+        <main class="main-content @(usuario == null ? "fullscreen" : "") w-100">
             @RenderBody()
         </main>
+
         @if (usuario != null)
         {
             <aside class="right-panel">
