@@ -10,8 +10,7 @@ namespace AppGestionStock.Models
         [Column("IdInventario")]
         public int IdInventario { get; set; }
 
-        [Required(ErrorMessage = "El producto es obligatorio")]
-        [Column("IdProducto")]
+        [ForeignKey("IdProducto")]
         public int IdProducto { get; set; }
 
         [Required(ErrorMessage = "La fecha es obligatoria")]

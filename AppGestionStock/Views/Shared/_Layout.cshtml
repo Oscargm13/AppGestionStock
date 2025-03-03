@@ -63,21 +63,34 @@
         {
             <aside class="right-panel">
                 <h6 class="text-center">Movimientos Recientes</h6>
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <p class="card-text">Entrada: 50 unidades de Producto A.</p>
-                    </div>
-                </div>
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <p class="card-text">Salida: 20 unidades de Producto B.</p>
-                    </div>
-                </div>
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <p class="card-text">Stock actualizado: Producto C.</p>
-                    </div>
-                </div>
+                @if (ViewData["inventario"] is List<Inventario> inventarioList)
+                {
+                    @foreach (var movimiento in inventarioList)
+                    {
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    @if (movimiento.TipoMovimiento == "Salida")
+                                    {
+                                        <span>Salida: @movimiento.Cantidad unidades de Producto @movimiento.IdProducto.</span>
+                                    }
+                                    else if (movimiento.TipoMovimiento == "Entrada")
+                                    {
+                                        <span>Entrada: @movimiento.Cantidad unidades de Producto @movimiento.IdProducto.</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Stock actualizado: Producto @movimiento.IdProducto.</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No hay movimientos recientes.</p>
+                }
             </aside>
         }
     </div>

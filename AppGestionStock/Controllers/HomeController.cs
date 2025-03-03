@@ -10,17 +10,23 @@ namespace AppGestionStock.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private RepositoyProductos repoProductos;
+        private RepositoryInventario repoInventario;
 
-        public HomeController(ILogger<HomeController> logger, RepositoyProductos repoProductos)
+        public HomeController(ILogger<HomeController> logger, RepositoyProductos repoProductos, RepositoryInventario repoInventario)
         {
             _logger = logger;
             this.repoProductos = repoProductos;
+            this.repoInventario = repoInventario;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             int stockTotalGerente = this.repoProductos.GetTotalStockGerente(HttpContext.Session.GetObject<Usuario>("USUARIO").IdUsuario);
             ViewData["STOCKTOTAL"] = stockTotalGerente;
+
+            List<Inventario> inventario = await this.repoInventario.GetMovimientos();
+            ViewData["INVENTARIO"] = inventario;
+
             return View();
         }
 

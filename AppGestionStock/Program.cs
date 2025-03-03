@@ -13,6 +13,7 @@ builder.Services.AddSession();
 builder.Services.AddTransient<RepositoryClientes>();
 builder.Services.AddTransient<RepositoyProductos>();
 builder.Services.AddTransient<RepositoryUsuario>();
+builder.Services.AddTransient<RepositoryInventario>();
 string connectionString = builder.Configuration.GetConnectionString("SqlAlmacenes");
 builder.Services.AddDbContext<AlmacenesContext>(options => options.UseSqlServer(connectionString));
 

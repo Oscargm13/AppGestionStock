@@ -27,5 +27,16 @@ namespace AppGestionStock.Data
 
         //MODELS USUARIOS
         public DbSet<Usuario> Usuarios { get; set; }
+
+        //INVENTARIO
+        public DbSet<Inventario> Inventario { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Inventario>()
+                .HasOne(i => i.Producto)
+                .WithMany()
+                .HasForeignKey(i => i.IdProducto);
+        }
     }
 }
