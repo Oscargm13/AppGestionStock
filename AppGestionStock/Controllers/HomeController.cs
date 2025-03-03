@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using AppGestionStock.Extensions;
 using AppGestionStock.Models;
 using AppGestionStock.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +19,8 @@ namespace AppGestionStock.Controllers
 
         public IActionResult Index()
         {
-            //List<ProductosTienda> productosTienda = repoProductos.GetProductosTienda();
-            //ViewData["STOCKTOTAL"] = 
+            int stockTotalGerente = this.repoProductos.GetTotalStockGerente(HttpContext.Session.GetObject<Usuario>("USUARIO").IdUsuario);
+            ViewData["STOCKTOTAL"] = stockTotalGerente;
             return View();
         }
 

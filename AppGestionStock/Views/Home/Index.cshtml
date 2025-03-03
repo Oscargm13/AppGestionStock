@@ -3,14 +3,59 @@
 }
 @model ProductosTienda
 <link rel="stylesheet" href="~/css/estilosHome.css" asp-append-version="true" />
+<style>
+    *{
+        box-sizing: border-box;
+    }
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px; /* Añadido padding para espaciado interno */
+    }
+
+    .card-title {
+        padding: .75rem 1.25rem;
+        margin-bottom: 0;
+        background-color: #f8f9fc;
+        border-bottom: 1px solid #e3e6f0;
+    }
+
+    .legend-container {
+        display: flex; /* Usamos flexbox para la leyenda en línea */
+        justify-content: center; /* Centramos la leyenda */
+        flex-wrap: wrap; /* Permite que la leyenda se envuelva en pantallas pequeñas */
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        padding: 5px 10px; /* Ajustamos márgenes para espaciado entre elementos */
+    }
+
+    .legend-color {
+        width: 15px; /* Reducimos el tamaño del círculo de color */
+        height: 15px;
+        border-radius: 50%;
+        margin-right: 5px; /* Reducimos el margen */
+    }
+
+    hr {
+        border: 1px solid #e0e0e0; /* Estilo de las líneas divisorias */
+        margin: 15px 0; /* Ajustamos márgenes */
+    }
+</style>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-4">
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Productos en Stock</h5>
-                    <p class="card-text">1500 productos disponibles.</p>
+                <div class="card-title">
+					<h5>@ViewData["STOCKTOTAL"] Productos en Stock</h5>
                 </div>
+                <canvas id="miGraficoCircular"></canvas>
+                <hr />
+                <div id="leyendaGrafico" class="legend-container"></div>
             </div>
         </div>
         <div class="col-md-4">
@@ -29,37 +74,63 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <canvas id="miGraficoCircular"></canvas>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    fetch('/api/Graficos/datosCircular')
-        .then(response => response.json())
-        .then(data => {
-            const labels = data.map(item => item.label);
-            const valores = data.map(item => item.valor);
-
-            const ctx = document.getElementById('miGraficoCircular').getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: valores,
-                        backgroundColor: [
-                            'red',
-                            'blue',
-                            'green'
-                        ]
-                    }]
+    const ctx = document.getElementById('miGraficoCircular').getContext('2d');
+    const miGrafico = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['TITLE 01', 'TITLE 02', 'TITLE 03', 'TITLE 04', 'TITLE 05'],
+            datasets: [{
+                data: [1, 1, 1, 1, 1],
+                backgroundColor: [
+                    '#42A5F5',
+                    '#66BB6A',
+                    '#FFEE58',
+                    '#EC407A',
+                    '#AB47BC'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            cutout: '50%',
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: false
+                },
+                labels: {
+                    position: 'center',
+                    font: {
+                        size: 16,
+                        weight: 'bold'
+                    },
+                    color: '#000'
                 }
-            });
-        });
+            }
+        }
+    });
+
+    // Crear leyenda dinámica en línea
+    const leyendaDiv = document.getElementById('leyendaGrafico');
+    miGrafico.data.labels.forEach((label, index) => {
+        const legendItem = document.createElement('div');
+        legendItem.classList.add('legend-item');
+
+        const colorDiv = document.createElement('div');
+        colorDiv.classList.add('legend-color');
+        colorDiv.style.backgroundColor = miGrafico.data.datasets[0].backgroundColor[index];
+
+        const labelSpan = document.createElement('span');
+        labelSpan.textContent = label;
+
+        legendItem.appendChild(colorDiv);
+        legendItem.appendChild(labelSpan);
+        leyendaDiv.appendChild(legendItem);
+    });
 </script>

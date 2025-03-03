@@ -49,6 +49,17 @@ namespace AppGestionStock.Repositories
             return consulta.ToList();
         }
 
+        public int GetTotalStockGerente(int idUsuarioGerente)
+        {
+            var consulta = (from datos in this.context.VistaProductosGerente
+                            join managers in this.context.ManagerTiendas
+                            on datos.IdTienda equals managers.IdTienda
+                            where managers.IdUsuario == idUsuarioGerente
+                            select datos.StockTienda).Sum();
+
+            return consulta;
+        }
+
         public VistaProductoTienda FindProductoTienda(int idProducto, int idTienda)
         {
             var consulta = (from datos in this.context.VistaProductosTienda
