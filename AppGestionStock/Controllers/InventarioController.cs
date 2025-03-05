@@ -22,7 +22,7 @@ namespace AppGestionStock.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Venta(DateTime fechaVenta, int idTienda, int idUsuario, decimal importeTotal, int idCliente,
+        public async Task<IActionResult> Venta(DateTime fechaVenta, int idTienda, int idUsuario, decimal importeTotal, int IdCliente,
             List<int> idProducto, List<int> cantidad, List<decimal> precioUnidad)
         {
             try
@@ -34,7 +34,7 @@ namespace AppGestionStock.Controllers
                     IdTienda = idTienda,
                     IdUsuario = idUsuario,
                     ImporteTotal = importeTotal,
-                    IdCliente = idCliente
+                    IdCliente = IdCliente
                 };
 
                 // 2. Crear la lista de DetallesVenta
@@ -54,7 +54,7 @@ namespace AppGestionStock.Controllers
                 ViewData["MensajeExito"] = "Venta registrada con exito";
 
                 // 4. Retornar una respuesta exitosa
-                return View("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {

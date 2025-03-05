@@ -54,7 +54,7 @@
                     </li>
                     <li>
                         <a class="nav-link text-white" asp-controller="Inventario" asp-action="Venta">
-                            <i data-lucide="file-symlink">Registrar venta</i>
+                            <i data-lucide="file-symlink"></i>Registrar venta
                         </a>
                     </li>
                 </ul>
@@ -68,7 +68,7 @@
         {
             <aside class="right-panel">
                 <h6 class="text-center">Movimientos Recientes</h6>
-                @if (ViewData["inventario"] is List<Inventario> inventarioList)
+                @if (Context.Session.GetObject<List<VistaInventarioDetalladoVenta>>("INVENTARIO") is List<VistaInventarioDetalladoVenta> inventarioList)
                 {
                     inventarioList.Reverse();
                     @foreach (var movimiento in inventarioList)
@@ -89,7 +89,28 @@
                                         <span>Stock actualizado: Producto @movimiento.IdProducto.</span>
                                     }
                                 </p>
+
+                                <div class="movimiento-detalles d-none">
+                                    <p><strong>Fecha:</strong> @movimiento.FechaMovimiento</p>
+                                    <p><strong>Responsable:</strong> @movimiento.TipoMovimiento</p>
+                                    <p><strong>Descripción:</strong> @movimiento.Cantidad</p>
+
+                                    @if (movimiento.IdCliente.HasValue && !string.IsNullOrEmpty(movimiento.NombreCliente))
+                                    {
+                                        <p><strong>Cliente:</strong> @movimiento.NombreCliente</p>
+                                    }
+                                    else
+                                    {
+                                        <p><strong>Cliente:</strong> No especificado</p>
+                                    }
+
+                                    <p><strong>Tienda:</strong> @(movimiento.NombreTienda ?? "No especificado")</p>
+                                </div>
                             </div>
+
+                            <button class="toggle-details-button" style="border: none; background: none; padding: 0; cursor: pointer;">
+                                <i class="toggle-details" data-lucide="chevron-down"></i>
+                            </button>
                         </div>
                     }
                 }
@@ -104,6 +125,37 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         lucide.createIcons();
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".toggle-details-button").forEach(button => {
+                button.addEventListener("click", function () {
+                    let card = this.closest(".card");
+                    let detalles = card.querySelector(".movimiento-detalles");
+                    let icon = this.querySelector(".toggle-details");
+                    let isOpen = !detalles.classList.contains("d-none");
+
+                    // Cerrar todas las demás tarjetas
+                    document.querySelectorAll(".movimiento-detalles").forEach(otherDetalles => {
+                        if (otherDetalles !== detalles) {
+                            otherDetalles.classList.add("d-none");
+                            otherDetalles.closest(".card").querySelector(".toggle-details").setAttribute("data-lucide", "chevron-down");
+                        }
+                    });
+
+                    // Alternar la tarjeta actual
+                    if (isOpen) {
+                        detalles.classList.add("d-none");
+                        icon.setAttribute("data-lucide", "chevron-down");
+                    } else {
+                        detalles.classList.remove("d-none");
+                        icon.setAttribute("data-lucide", "chevron-up");
+                    }
+
+                    lucide.createIcons();
+                });
+            });
+        });
     </script>
     @RenderSection("Scripts", required: false)
 </body>

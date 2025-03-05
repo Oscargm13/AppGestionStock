@@ -24,8 +24,13 @@ namespace AppGestionStock.Controllers
             int stockTotalGerente = this.repoProductos.GetTotalStockGerente(HttpContext.Session.GetObject<Usuario>("USUARIO").IdUsuario);
             ViewData["STOCKTOTAL"] = stockTotalGerente;
 
-            List<Inventario> inventario = await this.repoInventario.GetMovimientos();
-            ViewData["INVENTARIO"] = inventario;
+            List<VistaInventarioDetalladoVenta> inventario = await this.repoInventario.GetMovimientos();
+            //TempData["INVENTARIO"] = inventario;
+            HttpContext.Session.SetObject("INVENTARIO", inventario);
+
+            //DetallesVenta detallesVenta = await this.repoInventario.GetDetallesVenta(idventa){
+
+            //}
 
             return View();
         }

@@ -30,10 +30,12 @@ namespace AppGestionStock.Data
 
         //INVENTARIO
         public DbSet<Inventario> Inventario { get; set; }
+        public DbSet<DetallesVenta> DetallesVenta { get; set; }
+        public DbSet<VistaInventarioDetalladoVenta> vistaInventarioDetalladoVenta {get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Inventario>()
+            modelBuilder.Entity<VistaInventarioDetalladoVenta>()
                 .HasOne(i => i.Producto)
                 .WithMany()
                 .HasForeignKey(i => i.IdProducto);

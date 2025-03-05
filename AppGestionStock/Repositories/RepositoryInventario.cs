@@ -16,9 +16,9 @@ namespace AppGestionStock.Repositories
             this.context = context;
         }
 
-        public async Task<List<Inventario>> GetMovimientos()
+        public async Task<List<VistaInventarioDetalladoVenta>> GetMovimientos()
         {
-            return await this.context.Inventario.Include(i => i.Producto).ToListAsync();
+            return await this.context.vistaInventarioDetalladoVenta.Include(i => i.Producto).ToListAsync();
         }
 
         public async Task ProcesarVenta(Venta venta, List<DetallesVenta> detalles)
@@ -54,6 +54,14 @@ namespace AppGestionStock.Repositories
                     await command.ExecuteNonQueryAsync();
                 }
             }
+        }
+
+        public async Task<DetallesVenta> GetDetallesVenta(int idDetallesVenta)
+        {
+            var consulta = (from datos in this.context.DetallesVenta
+                            where datos.IdProducto == idDetallesVenta
+                            select datos).FirstOrDefault();
+            return consulta;
         }
     }
 }
