@@ -52,6 +52,11 @@
                             <i data-lucide="user"></i> Log out
                         </a>
                     </li>
+                    <li>
+                        <a class="nav-link text-white" asp-controller="Inventario" asp-action="Venta">
+                            <i data-lucide="file-symlink">Registrar venta</i>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         }
@@ -65,6 +70,7 @@
                 <h6 class="text-center">Movimientos Recientes</h6>
                 @if (ViewData["inventario"] is List<Inventario> inventarioList)
                 {
+                    inventarioList.Reverse();
                     @foreach (var movimiento in inventarioList)
                     {
                         <div class="card mb-2">

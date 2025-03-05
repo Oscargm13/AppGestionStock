@@ -26,6 +26,9 @@ namespace AppGestionStock.Models
         [Column("ImporteTotal")]
         public decimal ImporteTotal { get; set; }
 
+        [Column("IdCliente")]
+        public int IdCliente { get; set; }
+
         public Tienda Tienda { get; set; }
         public Usuario Usuario { get; set; }
         public ICollection<DetallesVenta> DetallesVentas { get; set; }

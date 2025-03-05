@@ -1,0 +1,103 @@
+﻿@model AppGestionStock.Models.Venta
+
+@{
+    ViewData["Title"] = "Realizar Venta";
+}
+
+<h1 class="text-center mb-4">Realizar Venta</h1>
+
+@if (ViewBag.MensajeExito != null)
+{
+    <div class="alert alert-success text-center">
+        @ViewBag.MensajeExito
+        <br />
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Volver al Home</a>
+    </div>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form asp-action="Venta" method="post">
+                            <div class="form-group mb-3">
+                                <label asp-for="FechaVenta" class="form-label">Fecha de Venta:</label>
+                                <input asp-for="FechaVenta" class="form-control" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="IdTienda" class="form-label">ID de Tienda:</label>
+                                <input asp-for="IdTienda" class="form-control" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="IdUsuario" class="form-label">ID de Usuario:</label>
+                                <input asp-for="IdUsuario" class="form-control" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="ImporteTotal" class="form-label">Importe Total:</label>
+                                <input asp-for="ImporteTotal" class="form-control" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="IdCliente" class="form-label">ID de Cliente (opcional):</label>
+                                <input asp-for="IdCliente" class="form-control" />
+                            </div>
+
+                            <h2 class="mb-3">Detalles de Venta</h2>
+                            <div id="detallesVenta">
+                                <div class="detalleVenta mb-4 p-3 border rounded">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">ID de Producto:</label>
+                                        <input type="number" name="idProducto[0]" class="form-control" />
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Cantidad:</label>
+                                        <input type="number" name="cantidad[0]" class="form-control" />
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Precio Unitario:</label>
+                                        <input type="number" step="0.01" name="precioUnidad[0]" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" id="agregarDetalle" class="btn btn-secondary mb-4">Agregar Detalle</button>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Realizar Venta</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    let contadorDetalles = 1;
+
+    document.getElementById('agregarDetalle').addEventListener('click', function() {
+        const detallesVenta = document.getElementById('detallesVenta');
+        const nuevoDetalle = document.createElement('div');
+        nuevoDetalle.classList.add('detalleVenta', 'mb-4', 'p-3', 'border', 'rounded');
+
+        nuevoDetalle.innerHTML = `
+            <div class="form-group mb-3">
+                <label class="form-label">ID de Producto:</label>
+                <input type="number" name="idProducto[${contadorDetalles}]" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Cantidad:</label>
+                <input type="number" name="cantidad[${contadorDetalles}]" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Precio Unitario:</label>
+                <input type="number" step="0.01" name="precioUnidad[${contadorDetalles}]" class="form-control" />
+            </div>
+        `;
+
+        detallesVenta.appendChild(nuevoDetalle);
+        contadorDetalles++;
+    });
+</script>
