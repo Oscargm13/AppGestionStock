@@ -9,10 +9,12 @@ namespace AppGestionStock.Controllers
     {
         private RepositoryInventario repo;
         private RepositryTiendas repoTiendas;
-        public InventarioController(RepositoryInventario repo, RepositryTiendas repoTiendas)
+        private RepositoyProductos repoProductos;
+        public InventarioController(RepositoryInventario repo, RepositryTiendas repoTiendas, RepositoyProductos repoProductos)
         {
             this.repo = repo;
             this.repoTiendas = repoTiendas;
+            this.repoProductos = repoProductos;
         }
         public async Task<IActionResult> Index()
         {
@@ -26,14 +28,26 @@ namespace AppGestionStock.Controllers
             ViewData["TIENDAS"] = tiendas;
             return View();
         }
+
         [HttpPost]
-        public async Task<IActionResult> Venta(DateTime fechaVenta, int idTienda, int IdCliente,
+        public async Task<IActionResult> Venta(Venta venta, string siguientePaso,
             List<int> idProducto, List<int> cantidad, List<decimal> precioUnidad)
         {
+            if (!string.IsNullOrEmpty(siguientePaso) && siguientePaso == "true")
+            {
+                // Obtener los productos de la tienda seleccionada
+                List<VistaProductoTienda> productos = this.repoProductos.GetVistaProductosTienda(venta.IdTienda);
+                ViewData["PRODUCTOS"] = productos;
+                ViewData["TIENDAS"] = this.repoTiendas.GetTiendas(); // Asegura que las tiendas se envíen de nuevo
+
+                // Pasar los datos de la primera parte del formulario a la vista
+                return View("Venta", venta);
+            }
+
             try
             {
                 decimal importe = 0;
-                if (cantidad != null && precioUnidad != null && idProducto != null && 
+                if (cantidad != null && precioUnidad != null && idProducto != null &&
                     cantidad.Count == precioUnidad.Count && cantidad.Count == idProducto.Count &&
                     cantidad.Count > 0)
                 {
@@ -46,15 +60,10 @@ namespace AppGestionStock.Controllers
                 {
                     return BadRequest("Las listas de cantidad, precioUnidad o idProducto son inválidas.");
                 }
+
                 // 1. Crear el objeto Venta
-                var venta = new Venta
-                {
-                    FechaVenta = fechaVenta,
-                    IdTienda = idTienda,
-                    IdUsuario = HttpContext.Session.GetObject<Usuario>("USUARIO").IdUsuario,
-                    ImporteTotal = importe,
-                    IdCliente = IdCliente
-                };
+                venta.IdUsuario = HttpContext.Session.GetObject<Usuario>("USUARIO").IdUsuario;
+                venta.ImporteTotal = importe;
 
                 // 2. Crear la lista de DetallesVenta
                 var detallesVenta = new List<DetallesVenta>();

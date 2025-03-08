@@ -1,7 +1,13 @@
 ﻿@model Venta
 
+<link rel="stylesheet" href="~/css/estilosVentas.css">
+
 @{
     ViewData["Title"] = "Realizar Venta";
+}
+
+@{
+    List<VistaProductoTienda> productos = (List<VistaProductoTienda>)ViewData["PRODUCTOS"];
 }
 
 <h1 class="text-center mb-4">Registrar Venta</h1>
@@ -42,7 +48,7 @@ else
                                     <input asp-for="IdCliente" class="form-control" />
                                 </div>
 
-                                <button type="button" id="siguientePaso" class="btn btn-primary">Siguiente</button>
+                                <button type="submit" name="siguientePaso" value="true" class="btn btn-primary">Siguiente</button>
                             </div>
 
                             <div id="paso2" style="display: none;">
@@ -51,7 +57,16 @@ else
                                     <div class="detalleVenta mb-4 p-3 border rounded" id="detalleActual">
                                         <div class="form-group mb-3">
                                             <label class="form-label">ID de Producto:</label>
-                                            <input type="number" id="idProducto" class="form-control" />
+                                            <select id="idProducto" class="form-control">
+                                                <option value="">Seleccione un producto</option>
+                                                @if (productos != null)
+                                                {
+                                                    @foreach (var producto in productos)
+                                                    {
+                                                        <option value="@producto.IdProducto" data-precio="@producto.Precio.ToString(System.Globalization.CultureInfo.InvariantCulture)">@producto.Nombre</option>
+                                                    }
+                                                }
+                                            </select>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label class="form-label">Cantidad:</label>
@@ -66,6 +81,10 @@ else
 
                                 <button type="button" id="agregarProducto" class="btn btn-secondary mb-4">Agregar Nuevo Producto</button>
                                 <button type="submit" class="btn btn-primary" id="registrarVenta">Registrar Venta</button>
+
+                                <input type="hidden" asp-for="IdTienda" />
+                                <input type="hidden" asp-for="FechaVenta" />
+                                <input type="hidden" asp-for="IdCliente" />
                             </div>
                         </form>
                     </div>
@@ -78,9 +97,13 @@ else
 <script>
     let detalles = []; // Lista para almacenar los detalles de venta
 
-    document.getElementById('siguientePaso').addEventListener('click', function() {
-        document.getElementById('paso1').style.display = 'none';
-        document.getElementById('paso2').style.display = 'block';
+    document.getElementById('idProducto').addEventListener('change', function() {
+        let precio = parseFloat(this.options[this.selectedIndex].getAttribute('data-precio'));
+        if (!isNaN(precio)) {
+            document.getElementById('precioUnidad').value = precio.toFixed(2); // Mostrar siempre 2 decimales
+        } else {
+            document.getElementById('precioUnidad').value = '';
+        }
     });
 
     document.getElementById('agregarProducto').addEventListener('click', function() {
@@ -138,4 +161,9 @@ else
             this.appendChild(precioUnidadInput);
         });
     });
+
+    if (document.getElementById('idProducto').options.length > 1) {
+        document.getElementById('paso1').style.display = 'none';
+        document.getElementById('paso2').style.display = 'block';
+    }
 </script>
