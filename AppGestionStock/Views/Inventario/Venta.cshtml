@@ -1,10 +1,10 @@
-﻿@model AppGestionStock.Models.Venta
+﻿@model Venta
 
 @{
     ViewData["Title"] = "Realizar Venta";
 }
 
-<h1 class="text-center mb-4">Realizar Venta</h1>
+<h1 class="text-center mb-4">Registrar Venta</h1>
 
 @if (ViewBag.MensajeExito != null)
 {
@@ -21,50 +21,51 @@ else
             <div class="col-md-8">
                 <div class="card shadow">
                     <div class="card-body">
-                        <form asp-action="Venta" method="post">
-                            <div class="form-group mb-3">
-                                <label asp-for="FechaVenta" class="form-label">Fecha de Venta:</label>
-                                <input asp-for="FechaVenta" class="form-control" />
-                            </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="IdTienda" class="form-label">ID de Tienda:</label>
-                                <input asp-for="IdTienda" class="form-control" />
-                            </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="IdUsuario" class="form-label">ID de Usuario:</label>
-                                <input asp-for="IdUsuario" class="form-control" />
-                            </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="ImporteTotal" class="form-label">Importe Total:</label>
-                                <input asp-for="ImporteTotal" class="form-control" />
-                            </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="IdCliente" class="form-label">ID de Cliente (opcional):</label>
-                                <input asp-for="IdCliente" class="form-control" />
+                        <form asp-action="Venta" method="post" id="ventaForm">
+                            <div id="paso1">
+                                <div class="form-group mb-3">
+                                    <label asp-for="FechaVenta" class="form-label">Fecha de Venta:</label>
+                                    <input asp-for="FechaVenta" class="form-control" />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label asp-for="IdTienda" class="form-label">ID de Tienda:</label>
+                                    <select asp-for="IdTienda" class="form-control">
+                                        <option value="">Seleccione una tienda</option>
+                                        @foreach (var tienda in (List<Tienda>)ViewData["TIENDAS"])
+                                        {
+                                            <option value="@tienda.IdTienda">@tienda.Nombre</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label asp-for="IdCliente" class="form-label">ID de Cliente:</label>
+                                    <input asp-for="IdCliente" class="form-control" />
+                                </div>
+
+                                <button type="button" id="siguientePaso" class="btn btn-primary">Siguiente</button>
                             </div>
 
-                            <h2 class="mb-3">Detalles de Venta</h2>
-                            <div id="detallesVenta">
-                                <div class="detalleVenta mb-4 p-3 border rounded">
-                                    <div class="form-group mb-3">
-                                        <label class="form-label">ID de Producto:</label>
-                                        <input type="number" name="idProducto[0]" class="form-control" />
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label class="form-label">Cantidad:</label>
-                                        <input type="number" name="cantidad[0]" class="form-control" />
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label class="form-label">Precio Unitario:</label>
-                                        <input type="number" step="0.01" name="precioUnidad[0]" class="form-control" />
+                            <div id="paso2" style="display: none;">
+                                <h2 class="mb-3">Detalles de Venta</h2>
+                                <div id="detallesVenta">
+                                    <div class="detalleVenta mb-4 p-3 border rounded" id="detalleActual">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">ID de Producto:</label>
+                                            <input type="number" id="idProducto" class="form-control" />
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">Cantidad:</label>
+                                            <input type="number" id="cantidad" class="form-control" />
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">Precio Unitario:</label>
+                                            <input type="number" step="0.01" id="precioUnidad" class="form-control" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <button type="button" id="agregarDetalle" class="btn btn-secondary mb-4">Agregar Detalle</button>
-
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Realizar Venta</button>
+                                <button type="button" id="agregarProducto" class="btn btn-secondary mb-4">Agregar Nuevo Producto</button>
+                                <button type="submit" class="btn btn-primary" id="registrarVenta">Registrar Venta</button>
                             </div>
                         </form>
                     </div>
@@ -75,29 +76,66 @@ else
 }
 
 <script>
-    let contadorDetalles = 1;
+    let detalles = []; // Lista para almacenar los detalles de venta
 
-    document.getElementById('agregarDetalle').addEventListener('click', function() {
-        const detallesVenta = document.getElementById('detallesVenta');
-        const nuevoDetalle = document.createElement('div');
-        nuevoDetalle.classList.add('detalleVenta', 'mb-4', 'p-3', 'border', 'rounded');
+    document.getElementById('siguientePaso').addEventListener('click', function() {
+        document.getElementById('paso1').style.display = 'none';
+        document.getElementById('paso2').style.display = 'block';
+    });
 
-        nuevoDetalle.innerHTML = `
-            <div class="form-group mb-3">
-                <label class="form-label">ID de Producto:</label>
-                <input type="number" name="idProducto[${contadorDetalles}]" class="form-control" />
-            </div>
-            <div class="form-group mb-3">
-                <label class="form-label">Cantidad:</label>
-                <input type="number" name="cantidad[${contadorDetalles}]" class="form-control" />
-            </div>
-            <div class="form-group mb-3">
-                <label class="form-label">Precio Unitario:</label>
-                <input type="number" step="0.01" name="precioUnidad[${contadorDetalles}]" class="form-control" />
-            </div>
-        `;
+    document.getElementById('agregarProducto').addEventListener('click', function() {
+        // Obtener los valores del detalle actual
+        let idProducto = document.getElementById('idProducto').value;
+        let cantidad = document.getElementById('cantidad').value;
+        let precioUnidad = document.getElementById('precioUnidad').value;
 
-        detallesVenta.appendChild(nuevoDetalle);
-        contadorDetalles++;
+        // Agregar el detalle a la lista
+        detalles.push({
+            IdProducto: idProducto,
+            Cantidad: cantidad,
+            PrecioUnidad: precioUnidad
+        });
+
+        // Limpiar el detalle actual
+        document.getElementById('idProducto').value = '';
+        document.getElementById('cantidad').value = '';
+        document.getElementById('precioUnidad').value = '';
+    });
+
+    document.getElementById('registrarVenta').addEventListener('click', function() {
+        // Obtener los valores del detalle actual
+        let idProducto = document.getElementById('idProducto').value;
+        let cantidad = document.getElementById('cantidad').value;
+        let precioUnidad = document.getElementById('precioUnidad').value;
+
+        // Agregar el detalle a la lista
+        detalles.push({
+            IdProducto: idProducto,
+            Cantidad: cantidad,
+            PrecioUnidad: precioUnidad
+        });
+    });
+
+    document.getElementById('ventaForm').addEventListener('submit', function(event) {
+        // Agregar los detalles almacenados al formulario antes de enviarlo
+        detalles.forEach((detalle, index) => {
+            let idProductoInput = document.createElement('input');
+            idProductoInput.type = 'hidden';
+            idProductoInput.name = `idProducto[${index}]`;
+            idProductoInput.value = detalle.IdProducto;
+            this.appendChild(idProductoInput);
+
+            let cantidadInput = document.createElement('input');
+            cantidadInput.type = 'hidden';
+            cantidadInput.name = `cantidad[${index}]`;
+            cantidadInput.value = detalle.Cantidad;
+            this.appendChild(cantidadInput);
+
+            let precioUnidadInput = document.createElement('input');
+            precioUnidadInput.type = 'hidden';
+            precioUnidadInput.name = `precioUnidad[${index}]`;
+            precioUnidadInput.value = detalle.PrecioUnidad;
+            this.appendChild(precioUnidadInput);
+        });
     });
 </script>

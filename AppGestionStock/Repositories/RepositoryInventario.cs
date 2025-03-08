@@ -37,6 +37,7 @@ namespace AppGestionStock.Repositories
                     command.Parameters.Add(new SqlParameter("@IdTienda", venta.IdTienda));
                     command.Parameters.Add(new SqlParameter("@IdUsuario", venta.IdUsuario));
                     command.Parameters.Add(new SqlParameter("@ImporteTotal", venta.ImporteTotal));
+                    command.Parameters.Add(new SqlParameter("@IdCliente", venta.IdCliente));
 
                     // Crear XML para los detalles de venta
                     var detallesXml = new XElement("Detalles",
