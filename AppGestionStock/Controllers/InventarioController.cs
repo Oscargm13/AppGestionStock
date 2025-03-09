@@ -3,6 +3,108 @@ using AppGestionStock.Models;
 using AppGestionStock.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
+#region
+/*
+ CREATE PROCEDURE IngresosMes
+    @mes INT,
+    @año INT,
+    @ingresos DECIMAL(18, 2) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @ventas DECIMAL(18, 2);
+    DECLARE @compras DECIMAL(18, 2);
+
+    -- Obtener ingresos por ventas
+    SELECT @ventas = ISNULL(SUM(ImporteTotal), 0)
+    FROM Ventas
+    WHERE MONTH(FechaVenta) = @mes AND YEAR(FechaVenta) = @año;
+
+    -- Obtener gastos por compras
+    SELECT @compras = ISNULL(SUM(ImporteTotal), 0)
+    FROM Compras
+    WHERE MONTH(FechaCompra) = @mes AND YEAR(FechaCompra) = @año;
+
+    -- Calcular ingresos netos
+    SET @ingresos = @ventas - @compras;
+END;
+
+CREATE PROCEDURE ProcesarCompra
+    @FechaCompra DATETIME,
+    @IdProveedor INT,
+    @IdTienda INT,
+    @IdUsuario INT,
+    @ImporteTotal DECIMAL(18, 2),
+    @DetallesCompra XML
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- 1. Insertar la compra
+        INSERT INTO Compras (FechaCompra, IdProveedor, IdTienda, IdUsuario, ImporteTotal)
+        VALUES (@FechaCompra, @IdProveedor, @IdTienda, @IdUsuario, @ImporteTotal);
+
+        DECLARE @IdCompra INT = SCOPE_IDENTITY();
+
+        -- 2. Insertar los detalles de compra
+        INSERT INTO DetallesCompra (IdCompra, IdProducto, Cantidad, PrecioUnidad)
+        SELECT @IdCompra,
+               Detalles.value('(IdProducto)[1]', 'INT'),
+               Detalles.value('(Cantidad)[1]', 'INT'),
+               Detalles.value('(PrecioUnidad)[1]', 'DECIMAL(18, 2)')
+        FROM @DetallesCompra.nodes('/Detalles/Detalle') AS Detalles(Detalles);
+
+        -- 3. Actualizar el inventario (entrada en vez de salida)
+        INSERT INTO Inventario (IdProducto, FechaMovimiento, TipoMovimiento, Cantidad, IdMovimiento)
+        SELECT Detalles.value('(IdProducto)[1]', 'INT'),
+               @FechaCompra,
+               'Entrada',
+               Detalles.value('(Cantidad)[1]', 'INT'),
+               @IdCompra
+        FROM @DetallesCompra.nodes('/Detalles/Detalle') AS Detalles(Detalles);
+
+        -- 4. Actualizar el stock en ProductosTienda (incrementando en vez de decrementando)
+        UPDATE ProductosTienda
+        SET Cantidad = pt.Cantidad + Detalles.value('(Cantidad)[1]', 'INT')
+        FROM ProductosTienda pt
+        INNER JOIN @DetallesCompra.nodes('/Detalles/Detalle') AS Detalles(Detalles)
+            ON pt.IdProducto = Detalles.value('(IdProducto)[1]', 'INT')
+        WHERE pt.IdTienda = @IdTienda;
+
+        -- 5. Manejar casos donde el producto no existe en la tienda todavía
+        INSERT INTO ProductosTienda (IdProducto, IdTienda, Cantidad)
+        SELECT 
+            Detalles.value('(IdProducto)[1]', 'INT'),
+            @IdTienda,
+            Detalles.value('(Cantidad)[1]', 'INT')
+        FROM @DetallesCompra.nodes('/Detalles/Detalle') AS Detalles(Detalles)
+        WHERE NOT EXISTS (
+            SELECT 1 FROM ProductosTienda 
+            WHERE IdProducto = Detalles.value('(IdProducto)[1]', 'INT')
+            AND IdTienda = @IdTienda
+        );
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+        
+        -- Guardar información del error para diagnóstico
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
+        DECLARE @ErrorState INT = ERROR_STATE();
+        
+        RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH;
+END;
+ */
+#endregion
+
 namespace AppGestionStock.Controllers
 {
     public class InventarioController : Controller

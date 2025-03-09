@@ -16,7 +16,11 @@ SELECT
     v.IdCliente,
     c.Nombre AS NombreCliente,
     v.IdTienda,
-    t.Nombre AS NombreTienda
+    t.Nombre AS NombreTienda,
+    co.IdProveedor,
+    pr.NombreEmpresa as NombreProveedor,
+    co.IdTienda as IdTiendaCompra,
+    ti.Nombre as NombreTiendaCompra
 FROM
     Inventario i
 LEFT JOIN
@@ -26,7 +30,13 @@ LEFT JOIN
 LEFT JOIN
     Clientes c ON v.IdCliente = c.IdCliente
 LEFT JOIN
-    Tiendas t ON v.IdTienda = t.IdTienda;
+    Tiendas t ON v.IdTienda = t.IdTienda
+LEFT JOIN
+    Compras co ON i.IdMovimiento = co.IdCompra
+LEFT JOIN
+    Proveedores pr ON co.IdProveedor = pr.IdProveedor
+LEFT JOIN
+    Tiendas ti ON co.IdTienda = ti.IdTienda;
 */
 #endregion
 

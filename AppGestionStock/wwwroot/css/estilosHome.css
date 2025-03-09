@@ -8,6 +8,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     padding: 20px;
+    background-color: #FFFFFF;
 }
 
 .card-title {
@@ -51,7 +52,7 @@ hr {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: white;
+    background-color: #FFFFFF;
     height: 80px; /* Aumentado el alto */
 }
 
