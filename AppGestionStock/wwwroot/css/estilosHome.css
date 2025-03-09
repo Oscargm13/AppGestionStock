@@ -1,4 +1,118 @@
-﻿
+﻿* {
+    box-sizing: border-box;
+}
+
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.card-title {
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.legend-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+}
+
+.legend-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+hr {
+    border: 1px solid #e0e0e0;
+    margin: 15px 0;
+}
+
+.earnings-card {
+    border: 1px solid #e0e0e0;
+    border-left: 7px solid #556B2F;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    height: 80px; /* Aumentado el alto */
+}
+
+.earnings-content {
+    flex-grow: 1;
+    text-align: center; /* Centrado del contenido */
+}
+
+.earnings-title {
+    font-size: 1.1em; /* Ligeramente aumentado el tamaño de la fuente */
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.earnings-amount {
+    font-size: 2em; /* Aumentado el tamaño de la fuente */
+    font-weight: bold;
+    color: #28a745;
+}
+
+.earnings-icon {
+    font-size: 3em; /* Aumentado el tamaño del icono */
+    color: #ccc;
+}
+
+.card-row {
+    display: flex;
+    justify-content: center; /* Centrado de las tarjetas */
+    margin-bottom: 20px;
+    gap: 25px; /* Ligeramente aumentado el espacio entre tarjetas */
+}
+
+    .card-row .earnings-card {
+        width: 280px; /* Ancho fijo para mayor control */
+    }
+
+
+.chart-card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.chart-container {
+    width: 30%; /* Ajusta el ancho del gráfico */
+    padding: 20px;
+}
+
+.chart-text {
+    width: 70%; /* Ajusta el ancho del texto */
+    padding: 20px;
+}
+
+    .chart-text h5 {
+        margin-bottom: 10px;
+    }
+
+.legend-container {
+    justify-content: flex-start; /* Alinea la leyenda a la izquierda */
+}
+
 @media (max-width: 1290px) {
     .container .row {
         display: flex;
@@ -8,7 +122,6 @@
 
     .container .col-md-4 {
         flex: 1 1 calc(50% - 20px);
-        /*max-width: calc(50%);*/
         margin-bottom: 10px;
     }
 }
