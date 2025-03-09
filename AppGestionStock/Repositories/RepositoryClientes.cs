@@ -16,5 +16,11 @@ namespace AppGestionStock.Repositories
             var consulta = from datos in this.context.Clientes select datos;
             return consulta.ToList();
         }
+
+        public List<Proveedor> GetProveedores()
+        {
+            var consulta = from datos in this.context.Proveedores select datos;
+            return consulta.ToList();
+        }
     }
 }

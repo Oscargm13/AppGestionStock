@@ -1,7 +1,5 @@
 ﻿@model Venta
 
-<link rel="stylesheet" href="~/css/estilosVentas.css">
-
 @{
     ViewData["Title"] = "Realizar Venta";
 }
@@ -10,7 +8,7 @@
     List<VistaProductoTienda> productos = (List<VistaProductoTienda>)ViewData["PRODUCTOS"];
 }
 
-<h1 class="text-center mb-4">Registrar Venta</h1>
+<h1 class="text-center mb-3">Registrar Venta</h1>
 
 @if (ViewBag.MensajeExito != null)
 {
@@ -22,7 +20,7 @@
 }
 else
 {
-    <div class="container mt-5">
+    <div class="container mt-3">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow">

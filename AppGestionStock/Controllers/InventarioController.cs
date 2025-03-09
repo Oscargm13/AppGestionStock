@@ -10,11 +10,15 @@ namespace AppGestionStock.Controllers
         private RepositoryInventario repo;
         private RepositryTiendas repoTiendas;
         private RepositoyProductos repoProductos;
-        public InventarioController(RepositoryInventario repo, RepositryTiendas repoTiendas, RepositoyProductos repoProductos)
+        private RepositoryClientes repoClientes;
+        public InventarioController(RepositoryInventario repo, RepositryTiendas repoTiendas, RepositoyProductos repoProductos,
+            RepositoryClientes repoClientes)
         {
             this.repo = repo;
             this.repoTiendas = repoTiendas;
             this.repoProductos = repoProductos;
+            this.repoClientes = repoClientes;
+
         }
         public async Task<IActionResult> Index()
         {
@@ -91,5 +95,74 @@ namespace AppGestionStock.Controllers
             }
         }
 
+
+        public async Task<IActionResult> Compra()
+        {
+            List<Proveedor> proveedores = repoClientes.GetProveedores();
+            List<Tienda> tiendas = repoTiendas.GetTiendas();
+
+            ViewData["PROVEEDORES"] = proveedores;
+            ViewData["TIENDAS"] = tiendas;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Compra(DateTime fechaCompra, int idProveedor, int idTienda,
+            List<int> idProducto, List<int> cantidad, List<decimal> precioUnidad)
+        {
+            try
+            {
+                decimal importe = 0;
+                if (cantidad != null && precioUnidad != null && idProducto != null &&
+                    cantidad.Count == precioUnidad.Count && cantidad.Count == idProducto.Count &&
+                    cantidad.Count > 0)
+                {
+                    for (int i = 0; i < cantidad.Count; i++)
+                    {
+                        importe += precioUnidad[i] * cantidad[i];
+                    }
+                }
+                else
+                {
+                    return BadRequest("Las listas de cantidad, precioUnidad o idProducto son inválidas.");
+                }
+
+                // 1. Crear el objeto Compra
+                var compra = new Compra
+                {
+                    FechaCompra = fechaCompra,
+                    IdProveedor = idProveedor,
+                    IdTienda = idTienda,
+                    IdUsuario = HttpContext.Session.GetObject<Usuario>("USUARIO").IdUsuario, // Obtener el usuario de la sesión
+                    ImporteTotal = importe
+                };
+
+                // 2. Crear la lista de DetallesCompra
+                var detallesCompra = new List<DetallesCompra>();
+                for (int i = 0; i < idProducto.Count; i++)
+                {
+                    detallesCompra.Add(new DetallesCompra
+                    {
+                        IdProducto = idProducto[i],
+                        Cantidad = cantidad[i],
+                        PrecioUnidad = precioUnidad[i]
+                    });
+                }
+
+
+                // 3. Llamar al repositorio para procesar la compra
+                await repo.ProcesarCompra(compra, detallesCompra);
+                ViewData["MensajeExito"] = "Compra registrada con éxito";
+
+                // 4. Retornar una respuesta exitosa
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                // 5. Manejar errores
+                return BadRequest($"Error al procesar la compra: {ex.Message}");
+            }
+        }
     }
 }

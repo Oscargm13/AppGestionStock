@@ -22,12 +22,16 @@ namespace AppGestionStock.Models
         [Column("IdTienda")]
         public int IdTienda { get; set; }
 
+        [Column("IdUsuario")]
+        public int? IdUsuario { get; set; }  // Puede ser nullable si no es obligatorio
+
         [Required(ErrorMessage = "El importe total es obligatorio")]
         [Column("ImporteTotal")]
         public decimal ImporteTotal { get; set; }
 
         public Proveedor Proveedor { get; set; }
         public Tienda Tienda { get; set; }
+        public Usuario Usuario { get; set; }  // Agregar esta propiedad de navegación
         public ICollection<DetallesCompra> DetallesCompras { get; set; }
     }
 }
