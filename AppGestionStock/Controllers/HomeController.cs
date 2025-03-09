@@ -21,16 +21,21 @@ namespace AppGestionStock.Controllers
 
         public async Task<IActionResult> Index()
         {
+            // Cálculo del stock total
             int stockTotalGerente = this.repoProductos.GetTotalStockGerente(HttpContext.Session.GetObject<Usuario>("USUARIO").IdUsuario);
             ViewData["STOCKTOTAL"] = stockTotalGerente;
 
+            // Cálculo de los ingresos mensuales
+            int mesActual = DateTime.Now.Month;
+            int añoActual = DateTime.Now.Year;
+            decimal ingresosMensuales = await repoInventario.GetIngresosMes(mesActual, añoActual);
+            ViewData["INGRESOSMENSUALES"] = ingresosMensuales;
+            ViewData["MESACTUAL"] = mesActual;
+            ViewData["AÑOACTUAL"] = añoActual;
+
+            // Obtener la lista de inventario
             List<VistaInventarioDetalladoVenta> inventario = await this.repoInventario.GetMovimientos();
-            //TempData["INVENTARIO"] = inventario;
             HttpContext.Session.SetObject("INVENTARIO", inventario);
-
-            //DetallesVenta detallesVenta = await this.repoInventario.GetDetallesVenta(idventa){
-
-            //}
 
             return View();
         }

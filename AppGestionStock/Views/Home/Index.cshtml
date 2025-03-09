@@ -45,13 +45,47 @@
         border: 1px solid #e0e0e0; /* Estilo de las líneas divisorias */
         margin: 15px 0; /* Ajustamos márgenes */
     }
+
+    .earnings-card {
+        border: 1px solid #e0e0e0;
+        border-left: 7px solid #556B2F;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: antiquewhite;
+    }
+
+    .earnings-content {
+        flex-grow: 1;
+    }
+
+    .earnings-title {
+        font-size: 1.2em;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .earnings-amount {
+        font-size: 2em;
+        font-weight: bold;
+        color: #28a745; /* Color verde para indicar ganancia */
+    }
+
+    .earnings-icon {
+        font-size: 3em;
+        color: #ccc;
+    }
 </style>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-4">
             <div class="card">
                 <div class="card-title">
-					<h5>@ViewData["STOCKTOTAL"] Productos en Stock</h5>
+                    <h5>@ViewData["STOCKTOTAL"] Productos en Stock</h5>
                 </div>
                 <canvas id="miGraficoCircular"></canvas>
                 <hr />
@@ -59,10 +93,13 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Órdenes Pendientes</h5>
-                    <p class="card-text">12 órdenes en proceso.</p>
+            <div class="earnings-card">
+                <div class="earnings-content">
+                    <div class="earnings-title">EARNINGS (MONTHLY)</div>
+                    <div class="earnings-amount">$@ViewData["INGRESOSMENSUALES"]</div>
+                </div>
+                <div class="earnings-icon">
+                    <i class="fas fa-calendar-alt"></i>
                 </div>
             </div>
         </div>

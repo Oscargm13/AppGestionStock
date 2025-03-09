@@ -95,7 +95,10 @@ namespace AppGestionStock.Repositories
 
         public async Task<List<VistaInventarioDetalladoVenta>> GetMovimientos()
         {
-            return await this.context.vistaInventarioDetalladoVenta.Include(i => i.Producto).ToListAsync();
+            return await this.context.vistaInventarioDetalladoVenta
+                .Include(i => i.Producto)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task ProcesarVenta(Venta venta, List<DetallesVenta> detalles)
@@ -171,6 +174,37 @@ namespace AppGestionStock.Repositories
                 }
                 await connection.CloseAsync();
             }
+        }
+
+        public async Task<decimal> GetIngresosMes(int mes, int year)
+        {
+            decimal ingresos = 0;
+
+            // Utilizar el DbContext inyectado
+            using (var command = context.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = "IngresosMes";
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Parámetros de entrada
+                command.Parameters.Add(new SqlParameter("@mes", mes));
+                command.Parameters.Add(new SqlParameter("@año", year));
+
+                // Parámetro de salida
+                SqlParameter ingresosParameter = new SqlParameter("@ingresos", SqlDbType.Decimal);
+                ingresosParameter.Direction = ParameterDirection.Output;
+                command.Parameters.Add(ingresosParameter);
+
+                // Ejecutar el comando
+                await context.Database.OpenConnectionAsync(); // Abrir la conexión del DbContext
+                await command.ExecuteNonQueryAsync();
+
+                // Obtener el valor del parámetro de salida
+                ingresos = (decimal)ingresosParameter.Value;
+                command.Parameters.Clear();
+            }
+
+            return ingresos;
         }
 
         public async Task<DetallesVenta> GetDetallesVenta(int idDetallesVenta)
