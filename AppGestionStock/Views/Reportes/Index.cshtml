@@ -1,0 +1,35 @@
+﻿@model List<VistaInventarioDetalladoVenta>
+
+@{
+    ViewData["Title"] = "Lista de Movimientos de Inventario";
+}
+
+<h1>Lista de Movimientos de Inventario</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id Movimiento</th>
+            <th>Producto</th>
+            <th>Fecha</th>
+            <th>Cantidad</th>
+            <th>Cliente</th>
+            <th>Movimiento</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movimiento in Model)
+        {
+            <tr>
+                <td>@movimiento.IdMovimiento</td>
+                <td>@movimiento.NombreProducto</td>
+                <td>@movimiento.FechaMovimiento</td>
+                <td>@movimiento.Cantidad</td>
+                <td>@movimiento.NombreCliente</td>
+                <td>@movimiento.TipoMovimiento</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-controller="Reportes" asp-action="GenerarPdf" class="btn btn-primary">Generar Informe PDF</a>
