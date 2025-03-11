@@ -28,6 +28,13 @@ namespace AppGestionStock.Repositories
             return consulta.ToList();
         }
 
+        public async Task<List<VistaProductoTienda>> GetVistaProductosTiendaConStockBajo()
+        {
+            return await context.VistaProductosTienda
+                .Where(vp => vp.StockTienda < 15)
+                .ToListAsync();
+        }
+
         public List<ProductosTienda> GetProductosTiendaGerente(int idGerente)
         {
             var consulta = from pt in this.context.ProductosTienda

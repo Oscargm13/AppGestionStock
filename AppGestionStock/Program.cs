@@ -16,7 +16,8 @@ builder.Services.AddTransient<RepositoryUsuario>();
 builder.Services.AddTransient<RepositoryInventario>();
 builder.Services.AddTransient<RepositryTiendas>();
 string connectionString = builder.Configuration.GetConnectionString("SqlAlmacenes");
-builder.Services.AddDbContext<AlmacenesContext>(options => options.UseSqlServer(connectionString));
+//builder.Services.AddDbContext<AlmacenesContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<AlmacenesContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Scoped);
 
 var app = builder.Build();
 

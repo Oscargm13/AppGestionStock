@@ -2,6 +2,28 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
+#region
+/*
+ ALTER VIEW VistaProductosTienda AS
+SELECT
+    p.IdProducto,
+    p.Nombre,
+    p.Precio,
+    p.Coste,
+    p.IdCategoria,
+    p.Imagen,
+    pt.IdTienda,
+    t.Nombre AS NombreTienda,
+    pt.Cantidad AS StockTienda
+FROM
+    Productos p
+JOIN
+    ProductosTienda pt ON p.IdProducto = pt.IdProducto
+JOIN
+    Tiendas t ON pt.IdTienda = t.IdTienda;
+ */
+#endregion
+
 namespace AppGestionStock.Models
 {
     [Table("VistaProductosTienda")]
@@ -31,5 +53,8 @@ namespace AppGestionStock.Models
 
         [Column("StockTienda")]
         public int StockTienda { get; set; }
+
+        [Column("NombreTienda")]
+        public string NombreTienda { get; set; }
     }
 }

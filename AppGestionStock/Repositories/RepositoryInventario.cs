@@ -4,6 +4,7 @@ using AppGestionStock.Data;
 using AppGestionStock.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 #region
 /*
@@ -101,43 +102,141 @@ namespace AppGestionStock.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Notificacion>> GetNotificaciones()
+        {
+            return await context.Notificaciones.ToListAsync();
+        }
+
+        public async Task<bool> ExisteNotificacion(int idProducto, int idTienda, AlmacenesContext context)
+        {
+            return await context.Notificaciones
+                .AnyAsync(n => n.IdProducto == idProducto && n.IdTienda == idTienda);
+        }
+
+        public async Task CrearNotificacion(Notificacion notificacion, AlmacenesContext context)
+        {
+            context.Notificaciones.Add(notificacion);
+            await context.SaveChangesAsync();
+        }
+
         public async Task ProcesarVenta(Venta venta, List<DetallesVenta> detalles)
         {
-            using (var connection = context.Database.GetDbConnection())
+            using (var transaction = await context.Database.BeginTransactionAsync())
             {
-                await connection.OpenAsync();
-
-                using (var command = connection.CreateCommand())
+                try
                 {
-                    command.CommandText = "ProcesarVenta";
-                    command.CommandType = CommandType.StoredProcedure;
+                    using (var command = context.Database.GetDbConnection().CreateCommand())
+                    {
+                        command.Transaction = transaction.GetDbTransaction(); // Usa la transacción de EF Core
+                        command.CommandText = "ProcesarVentaStock";
+                        command.CommandType = CommandType.StoredProcedure;
 
-                    // Parámetros de la venta
-                    command.Parameters.Add(new SqlParameter("@FechaVenta", venta.FechaVenta));
-                    command.Parameters.Add(new SqlParameter("@IdTienda", venta.IdTienda));
-                    command.Parameters.Add(new SqlParameter("@IdUsuario", venta.IdUsuario));
-                    command.Parameters.Add(new SqlParameter("@ImporteTotal", venta.ImporteTotal));
-                    command.Parameters.Add(new SqlParameter("@IdCliente", venta.IdCliente));
+                        // Parámetros de la venta
+                        command.Parameters.Add(new SqlParameter("@FechaVenta", venta.FechaVenta));
+                        command.Parameters.Add(new SqlParameter("@IdTienda", venta.IdTienda));
+                        command.Parameters.Add(new SqlParameter("@IdUsuario", venta.IdUsuario));
+                        command.Parameters.Add(new SqlParameter("@ImporteTotal", venta.ImporteTotal));
+                        command.Parameters.Add(new SqlParameter("@IdCliente", venta.IdCliente));
 
-                    // Crear XML para los detalles de venta
-                    var detallesXml = new XElement("Detalles",
-                        detalles.Select(d => new XElement("Detalle",
-                            new XElement("IdProducto", d.IdProducto),
-                            new XElement("Cantidad", d.Cantidad),
-                            new XElement("PrecioUnidad", d.PrecioUnidad)
-                        ))
-                    );
+                        // Crear XML para los detalles de venta
+                        var detallesXml = new XElement("Detalles",
+                            detalles.Select(d => new XElement("Detalle",
+                                new XElement("IdProducto", d.IdProducto),
+                                new XElement("Cantidad", d.Cantidad),
+                                new XElement("PrecioUnidad", d.PrecioUnidad)
+                            ))
+                        );
 
-                    // Parámetro XML para los detalles de venta
-                    command.Parameters.Add(new SqlParameter("@DetallesVenta", detallesXml.ToString()));
+                        // Parámetro XML para los detalles de venta
+                        command.Parameters.Add(new SqlParameter("@DetallesVenta", detallesXml.ToString()));
 
-                    // Ejecutar el comando
-                    await command.ExecuteNonQueryAsync();
-                    command.Parameters.Clear();
+                        // Ejecutar el comando
+                        await command.ExecuteNonQueryAsync();
+                        command.Parameters.Clear();
+                    }
+
+                    // Verificar stock bajo y crear notificaciones (usando EF Core)
+                    foreach (var detalle in detalles)
+                    {
+                        var producto = await context.ProductosTienda
+                            .FirstOrDefaultAsync(pt => pt.IdProducto == detalle.IdProducto && pt.IdTienda == venta.IdTienda);
+
+                        if (producto != null && producto.Cantidad < 10) // Umbral de stock bajo
+                        {
+                            var notificacionExistente = await this.ExisteNotificacion(detalle.IdProducto, venta.IdTienda, context);
+                            if (!notificacionExistente)
+                            {
+                                var notificacion = new Notificacion
+                                {
+                                    Mensaje = $"Aviso de stock bajo: En {venta.IdTienda} la cantidad de {detalle.IdProducto} es de {producto.Cantidad}.",
+                                    Fecha = DateTime.Now,
+                                    IdProducto = detalle.IdProducto,
+                                    IdTienda = venta.IdTienda
+                                };
+                                await CrearNotificacion(notificacion, context);
+                            }
+                        }
+                    }
+
+                    await transaction.CommitAsync(); // Confirmar la transacción de EF Core
                 }
-                await connection.CloseAsync();
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync(); // Revertir la transacción de EF Core
+                    throw; // Re-lanza la excepción para que se maneje en la capa superior
+                }
             }
         }
+
+        //public async Task ProcesarVenta(Venta venta, List<DetallesVenta> detalles)
+        //{
+        //    using (var connection = context.Database.GetDbConnection())
+        //    {
+        //        await connection.OpenAsync();
+        //        using (var transaction = connection.BeginTransaction())
+        //        {
+        //            try
+        //            {
+        //                using (var command = connection.CreateCommand())
+        //                {
+        //                    command.Transaction = transaction;
+        //                    command.CommandText = "ProcesarVenta";
+        //                    command.CommandType = CommandType.StoredProcedure;
+
+        //                    // Parámetros de la venta
+        //                    command.Parameters.Add(new SqlParameter("@FechaVenta", venta.FechaVenta));
+        //                    command.Parameters.Add(new SqlParameter("@IdTienda", venta.IdTienda));
+        //                    command.Parameters.Add(new SqlParameter("@IdUsuario", venta.IdUsuario));
+        //                    command.Parameters.Add(new SqlParameter("@ImporteTotal", venta.ImporteTotal));
+        //                    command.Parameters.Add(new SqlParameter("@IdCliente", venta.IdCliente));
+
+        //                    // Crear XML para los detalles de venta
+        //                    var detallesXml = new XElement("Detalles",
+        //                        detalles.Select(d => new XElement("Detalle",
+        //                            new XElement("IdProducto", d.IdProducto),
+        //                            new XElement("Cantidad", d.Cantidad),
+        //                            new XElement("PrecioUnidad", d.PrecioUnidad)
+        //                        ))
+        //                    );
+
+        //                    // Parámetro XML para los detalles de venta
+        //                    command.Parameters.Add(new SqlParameter("@DetallesVenta", detallesXml.ToString()));
+
+        //                    // Ejecutar el comando
+        //                    await command.ExecuteNonQueryAsync();
+        //                    command.Parameters.Clear();
+        //                }
+        //                transaction.Commit();
+        //            }
+        //            catch (Exception)
+        //            {
+        //                transaction.Rollback();
+        //                throw; // Re-lanza la excepción para que se maneje en la capa superior
+        //            }
+        //        }
+        //        await connection.CloseAsync();
+        //    }
+        //}
 
         public async Task ProcesarCompra(Compra compra, List<DetallesCompra> detalles)
         {

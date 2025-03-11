@@ -37,6 +37,9 @@ namespace AppGestionStock.Controllers
             List<VistaInventarioDetalladoVenta> inventario = await this.repoInventario.GetMovimientos();
             HttpContext.Session.SetObject("INVENTARIO", inventario);
 
+            //OBTENER NOTIFICACIONES EN CASO DE HABERLAS
+            List<Notificacion> notificaciones = await repoInventario.GetNotificaciones();
+            ViewData["NOTIFICACIONES"] = notificaciones;
             return View();
         }
 

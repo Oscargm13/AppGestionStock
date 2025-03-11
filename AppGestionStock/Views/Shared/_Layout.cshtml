@@ -22,8 +22,37 @@
             <div class="user-info">
                 <img src="~/images/usuarios/@usuario.Imagen" alt="Usuario" />
                 <span>@usuario.Nombre</span>
+                <a href="#" id="notificaciones-btn" class="nav-link">
+                    <i data-lucide="bell"></i>
+                    @if (ViewData["NOTIFICACIONES"] != null && ((List<Notificacion>)ViewData["NOTIFICACIONES"]).Count > 0)
+                    {
+                        <span class="badge badge-danger">@(((List<Notificacion>)ViewData["NOTIFICACIONES"]).Count)</span>
+                    }
+                </a>
             </div>
         </nav>
+
+        <div id="notificaciones-dropdown" class="dropdown-menu dropdown-menu-right" style="position: absolute; right: 20px; top: 60px; display: none; z-index: 9999;">
+            @if (ViewData["NOTIFICACIONES"] != null)
+            {
+                List<Notificacion> notificaciones = (List<Notificacion>)ViewData["NOTIFICACIONES"];
+                if (notificaciones.Any())
+                {
+                    foreach (var notificacion in notificaciones)
+                    {
+                        <a class="dropdown-item" href="#">@notificacion.Mensaje - @notificacion.Fecha</a>
+                    }
+                }
+                else
+                {
+                    <a class="dropdown-item">No hay notificaciones.</a>
+                }
+            }
+            else
+            {
+                <a class="dropdown-item">No hay notificaciones.</a>
+            }
+        </div>
     }
     <div class="d-flex">
         @if (usuario != null)
@@ -164,6 +193,24 @@
 
                     lucide.createIcons();
                 });
+            });
+        });
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const notificacionesBtn = document.getElementById('notificaciones-btn');
+            const notificacionesDropdown = document.getElementById('notificaciones-dropdown');
+
+            notificacionesBtn.addEventListener('click', function (event) {
+                event.preventDefault();
+                notificacionesDropdown.style.display = notificacionesDropdown.style.display === 'none' ? 'block' : 'none';
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!notificacionesBtn.contains(event.target) && !notificacionesDropdown.contains(event.target)) {
+                    notificacionesDropdown.style.display = 'none';
+                }
             });
         });
     </script>

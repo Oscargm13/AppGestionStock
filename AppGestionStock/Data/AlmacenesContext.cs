@@ -36,6 +36,9 @@ namespace AppGestionStock.Data
         //PROVEEDORES
         public DbSet<Proveedor> Proveedores { get; set; }
 
+        //NOTIFICACIONES
+        public DbSet<Notificacion> Notificaciones { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<VistaInventarioDetalladoVenta>()
