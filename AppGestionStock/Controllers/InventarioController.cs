@@ -259,6 +259,25 @@ namespace AppGestionStock.Controllers
         //    //}
         //}
 
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Importante para seguridad CSRF
+        public async Task<IActionResult> DeleteNotificacion([FromBody] DeleteNotificacionRequest request)
+        {
+            if (request == null || request.IdNotificacion <= 0)
+            {
+                return Json(new { success = false, error = "ID de notificación inválido." });
+            }
+
+            try
+            {
+                await repo.DeleteNotificacion(request.IdNotificacion); // Usa el ID del objeto request
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
 
         public async Task<IActionResult> Compra()
         {
@@ -327,6 +346,23 @@ namespace AppGestionStock.Controllers
                 // 5. Manejar errores
                 return BadRequest($"Error al procesar la compra: {ex.Message}");
             }
+        }
+        public IActionResult GetProductosProveedor(int proveedorId)
+        {
+            var productosTask = repoProductos.GetProductosProveedor(proveedorId);
+            var productos = productosTask.Result;
+
+            return Json(productos.Select(p => new { p.IdProducto, p.Nombre }));
+        }
+
+        public IActionResult GetCostoProducto(int productoId)
+        {
+            Producto producto = repoProductos.GetProductoPorId(productoId);
+            if (producto != null)
+            {
+                return Json(producto.Coste);
+            }
+            return Json(0);
         }
     }
 }

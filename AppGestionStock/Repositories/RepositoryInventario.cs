@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 #region
 /*
- CREATE PROCEDURE ProcesarCompra
+CREATE PROCEDURE ProcesarCompra
     @FechaCompra DATETIME,
     @IdProveedor INT,
     @IdTienda INT,
@@ -245,17 +245,15 @@ namespace AppGestionStock.Repositories
                 await connection.OpenAsync();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "ProcesarCompra";
+                    command.CommandText = "ProcesoCompraNotificaciones";
                     command.CommandType = CommandType.StoredProcedure;
 
-                    // Parámetros de la compra
                     command.Parameters.Add(new SqlParameter("@FechaCompra", compra.FechaCompra));
                     command.Parameters.Add(new SqlParameter("@IdProveedor", compra.IdProveedor));
                     command.Parameters.Add(new SqlParameter("@IdTienda", compra.IdTienda));
                     command.Parameters.Add(new SqlParameter("@ImporteTotal", compra.ImporteTotal));
                     command.Parameters.Add(new SqlParameter("@IdUsuario", compra.IdUsuario));
 
-                    // Crear XML para los detalles de compra
                     var detallesXml = new XElement("Detalles",
                         detalles.Select(d => new XElement("Detalle",
                             new XElement("IdProducto", d.IdProducto),
@@ -264,10 +262,8 @@ namespace AppGestionStock.Repositories
                         ))
                     );
 
-                    // Parámetro XML para los detalles de compra
                     command.Parameters.Add(new SqlParameter("@DetallesCompra", detallesXml.ToString()));
 
-                    // Ejecutar el comando
                     await command.ExecuteNonQueryAsync();
                     command.Parameters.Clear();
                 }
@@ -312,6 +308,11 @@ namespace AppGestionStock.Repositories
                             where datos.IdProducto == idDetallesVenta
                             select datos).FirstOrDefault();
             return consulta;
+        }
+
+        public async Task DeleteNotificacion(int idNotificacion)
+        {
+            var notificacion = await context.Notificaciones.FindAsync(idNotificacion);
         }
     }
 }

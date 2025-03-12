@@ -19,7 +19,18 @@ namespace AppGestionStock.Repositories
             var consulta = from datos in this.context.Productos select datos;
             return consulta.ToList();
         }
-        
+
+        public async Task<List<Producto>> GetProductosProveedor(int proveedorId)
+        {
+            var consulta = from producto in this.context.Productos
+                           join productoProveedor in this.context.ProductosProveedores
+                               on producto.IdProducto equals productoProveedor.IdProducto
+                           where productoProveedor.IdProveedor == proveedorId
+                           select producto;
+
+            return await consulta.ToListAsync();
+        }
+
         public List<VistaProductoTienda> GetVistaProductosTienda(int idTienda)
         {
             var consulta = from datos in this.context.VistaProductosTienda
@@ -175,6 +186,11 @@ namespace AppGestionStock.Repositories
         {
             var consulta = from datos in this.context.Categorias select datos;
             return await consulta.ToListAsync();
-        } 
+        }
+
+        public Producto GetProductoPorId(int productoId)
+        {
+            return context.Productos.FirstOrDefault(p => p.IdProducto == productoId);
+        }
     }
 }

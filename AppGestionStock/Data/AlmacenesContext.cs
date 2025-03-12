@@ -12,6 +12,7 @@ namespace AppGestionStock.Data
         public DbSet<VistaProductoTienda> VistaProductosTienda { get; set; }
         public DbSet<VistaProductosGerente> VistaProductosGerente { get; set; }
         public DbSet<ManagerTienda> ManagerTiendas { get; set; }
+        public DbSet<ProductoProveedor> ProductosProveedores { get; set; }
 
         //MODELS CLIENTES
         public DbSet<Cliente> Clientes { get; set; }

@@ -19,16 +19,25 @@
         <nav class="navbar navbar-light bg-light px-3 fixed-top w-100">
             <h4>SynchroStock</h4>
             <span class="h5 mx-auto">@usuario.nombreEmpresa</span>
-            <div class="user-info">
-                <img src="~/images/usuarios/@usuario.Imagen" alt="Usuario" />
-                <span>@usuario.Nombre</span>
-                <a href="#" id="notificaciones-btn" class="nav-link">
+
+            <a href="#" id="notificaciones-btn" class="nav-link">
+                @if (ViewData["NOTIFICACIONES"] != null && ((List<Notificacion>)ViewData["NOTIFICACIONES"]).Count > 0)
+                {
+                    <i data-lucide="bell-dot" style="color: orange"></i>
+                    <span class="badge badge-danger">@(((List<Notificacion>)ViewData["NOTIFICACIONES"]).Count)</span>
+                }
+                else
+                {
                     <i data-lucide="bell"></i>
                     @if (ViewData["NOTIFICACIONES"] != null && ((List<Notificacion>)ViewData["NOTIFICACIONES"]).Count > 0)
                     {
                         <span class="badge badge-danger">@(((List<Notificacion>)ViewData["NOTIFICACIONES"]).Count)</span>
                     }
-                </a>
+                }
+            </a>
+            <div class="user-info">
+                <img src="~/images/usuarios/@usuario.Imagen" alt="Usuario" />
+                <span>@usuario.Nombre</span>
             </div>
         </nav>
 
@@ -40,7 +49,10 @@
                 {
                     foreach (var notificacion in notificaciones)
                     {
-                        <a class="dropdown-item" href="#">@notificacion.Mensaje - @notificacion.Fecha</a>
+                        <a class="dropdown-item notificacion-item" href="#">
+                            @notificacion.Mensaje - @notificacion.Fecha
+                            <i class="eliminar-notificacion" data-id="@notificacion.IdNotificacion" data-lucide="trash-2" style="color: red; cursor: pointer;"></i>
+                        </a>
                     }
                 }
                 else
@@ -213,7 +225,9 @@
                 }
             });
         });
+
     </script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>
