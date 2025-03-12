@@ -33,6 +33,7 @@ namespace AppGestionStock.Data
         public DbSet<Inventario> Inventario { get; set; }
         public DbSet<DetallesVenta> DetallesVenta { get; set; }
         public DbSet<VistaInventarioDetalladoVenta> vistaInventarioDetalladoVenta {get; set; }
+        public DbSet<Venta> Ventas { get; set; }
 
         //PROVEEDORES
         public DbSet<Proveedor> Proveedores { get; set; }
@@ -46,6 +47,15 @@ namespace AppGestionStock.Data
                 .HasOne(i => i.Producto)
                 .WithMany()
                 .HasForeignKey(i => i.IdProducto);
+            modelBuilder.Entity<Venta>()
+                .HasOne(v => v.Tienda)
+                .WithMany()
+                .HasForeignKey(v => v.IdTienda);
+
+            modelBuilder.Entity<Venta>()
+                .HasOne(v => v.Usuario)
+                .WithMany()
+                .HasForeignKey(v => v.IdUsuario);
         }
     }
 }

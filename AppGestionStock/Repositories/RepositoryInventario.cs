@@ -314,5 +314,10 @@ namespace AppGestionStock.Repositories
         {
             var notificacion = await context.Notificaciones.FindAsync(idNotificacion);
         }
+
+        public async Task<List<Venta>> GetVentas()
+        {
+            return await context.Ventas.ToListAsync();
+        }
     }
 }

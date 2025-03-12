@@ -40,6 +40,43 @@ namespace AppGestionStock.Controllers
             //OBTENER NOTIFICACIONES EN CASO DE HABERLAS
             List<Notificacion> notificaciones = await repoInventario.GetNotificaciones();
             ViewData["NOTIFICACIONES"] = notificaciones;
+
+            List<Venta> ventas = await this.repoInventario.GetVentas();
+
+            // Agrupar ventas por mes y calcular el total de montos
+            var ventasMensuales = ventas
+        .GroupBy(v => v.FechaVenta.Month)
+        .Select(g => new { Mes = g.Key, Total = g.Sum(v => v.ImporteTotal) })
+        .OrderBy(g => g.Mes)
+        .ToList();
+
+            // Imprimir ventasMensuales
+            Console.WriteLine("ventasMensuales:");
+            foreach (var venta in ventasMensuales)
+            {
+                Console.WriteLine($"Mes: {venta.Mes}, Total: {venta.Total}");
+            }
+
+            List<int> meses = ventasMensuales.Select(v => v.Mes).ToList();
+            List<decimal> montos = ventasMensuales.Select(v => v.Total).ToList();
+
+            // Imprimir meses
+            Console.WriteLine("\nMeses:");
+            foreach (var mes in meses)
+            {
+                Console.WriteLine(mes);
+            }
+
+            // Imprimir montos
+            Console.WriteLine("\nMontos:");
+            foreach (var monto in montos)
+            {
+                Console.WriteLine(monto);
+            }
+
+            ViewData["MESES"] = meses;
+            ViewData["MONTOS"] = montos;
+
             return View();
         }
 

@@ -35,14 +35,13 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card chart-card">
-                <div class="chart-container">
-                    <canvas id="miGraficoCircular" width="200" height="200"></canvas>
+            <div class="card chart-card" style="height: 60vh;">
+                <div class="chart-container" style="height: 100%;">
+                    <canvas id="ventasComprasChart"></canvas>
                 </div>
                 <div class="chart-text">
-                    <h5>@ViewData["STOCKTOTAL"] Productos en Stock</h5>
-                    <p>Información adicional sobre el stock...</p>
-                    <div id="leyendaGrafico" class="legend-container"></div>
+                    <h5>Ventas vs. Compras</h5>
+                    <p>Información detallada sobre ventas y compras...</p>
                 </div>
             </div>
         </div>
@@ -50,59 +49,55 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('miGraficoCircular').getContext('2d');
-    const miGrafico = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['TITLE 01', 'TITLE 02', 'TITLE 03', 'TITLE 04', 'TITLE 05'],
-            datasets: [{
-                data: [1, 1, 1, 1, 1],
-                backgroundColor: [
-                    '#42A5F5',
-                    '#66BB6A',
-                    '#FFEE58',
-                    '#EC407A',
-                    '#AB47BC'
-                ],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            cutout: '50%',
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    enabled: false
-                },
-                labels: {
-                    position: 'center',
-                    font: {
-                        size: 16,
-                        weight: 'bold'
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('ventasComprasChart').getContext('2d');
+
+        // Obtener datos de ViewData
+        const meses = @Html.Raw(Json.Serialize(ViewData["MESES"]));
+        const montos = @Html.Raw(Json.Serialize(ViewData["MONTOS"]));
+
+        console.log("Meses:", meses);
+        console.log("Montos:", montos);
+
+        // Construir etiquetas de los meses en español
+        const labels = meses.map(mes => {
+            const date = new Date(2000, mes - 1, 1);
+            return date.toLocaleString('es-ES', { month: 'long' });
+        });
+
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Ventas Mensuales',
+                    data: montos,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks: {
+                            autoSkip: true,
+                            maxRotation: 45,
+                            minRotation: 0
+                        }
                     },
-                    color: '#000'
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString(); // Formato de números
+                            }
+                        }
+                    }
                 }
             }
-        }
-    });
-
-    // Crear leyenda dinámica en línea
-    const leyendaDiv = document.getElementById('leyendaGrafico');
-    miGrafico.data.labels.forEach((label, index) => {
-        const legendItem = document.createElement('div');
-        legendItem.classList.add('legend-item');
-
-        const colorDiv = document.createElement('div');
-        colorDiv.classList.add('legend-color');
-        colorDiv.style.backgroundColor = miGrafico.data.datasets[0].backgroundColor[index];
-
-        const labelSpan = document.createElement('span');
-        labelSpan.textContent = label;
-
-        legendItem.appendChild(colorDiv);
-        legendItem.appendChild(labelSpan);
-        leyendaDiv.appendChild(legendItem);
+        });
     });
 </script>
