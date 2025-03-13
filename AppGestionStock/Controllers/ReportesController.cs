@@ -12,10 +12,12 @@ namespace AppGestionStock.Controllers
     public class ReportesController : Controller
     {
         private readonly RepositoryInventario repo;
+        private RepositoyProductos repoProductos;
 
-        public ReportesController(RepositoryInventario repo)
+        public ReportesController(RepositoryInventario repo, RepositoyProductos repoProductos)
         {
             this.repo = repo;
+            this.repoProductos = repoProductos;
         }
 
         public async Task<IActionResult> Index()
@@ -124,6 +126,67 @@ namespace AppGestionStock.Controllers
                 }
 
                 document.Add(table);
+
+                document.Close();
+                writer.Close();
+                return ms.ToArray();
+            }
+        }
+        public IActionResult GenerarPdfStock(int idTienda)
+        {
+            List<VistaProductoTienda> productos = this.repoProductos.GetVistaProductosTienda(idTienda);
+
+            if (productos == null || productos.Count == 0)
+            {
+                return NotFound("No se encontraron productos para la tienda especificada.");
+            }
+
+            byte[] pdfBytes = GenerarPdfStockBytes(productos, idTienda);
+
+            string fechaEmision = DateTime.Now.ToString("dd_MM_yyyy_HHmmss");
+            return File(pdfBytes, "application/pdf", $"Reporte_Stock_Tienda_{idTienda}_{fechaEmision}.pdf");
+        }
+
+        private byte[] GenerarPdfStockBytes(List<VistaProductoTienda> productos, int idTienda)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document document = new Document(PageSize.A4, 25, 25, 30, 30);
+                PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                document.Open();
+
+                Paragraph titulo = new Paragraph($"Informe de Stock - Tienda {idTienda}", new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD));
+                titulo.Alignment = Element.ALIGN_CENTER;
+                document.Add(titulo);
+
+                document.Add(Chunk.NEWLINE);
+
+                PdfPTable table = new PdfPTable(4); // 4 columnas: Nombre, Precio, Stock, Total
+                table.WidthPercentage = 100;
+
+                table.AddCell(new PdfPCell(new Phrase("Producto")) { BackgroundColor = BaseColor.LIGHT_GRAY });
+                table.AddCell(new PdfPCell(new Phrase("Precio")) { BackgroundColor = BaseColor.LIGHT_GRAY });
+                table.AddCell(new PdfPCell(new Phrase("Stock")) { BackgroundColor = BaseColor.LIGHT_GRAY });
+                table.AddCell(new PdfPCell(new Phrase("Total")) { BackgroundColor = BaseColor.LIGHT_GRAY });
+
+                int totalStock = 0;
+
+                foreach (var producto in productos)
+                {
+                    table.AddCell(new PdfPCell(new Phrase(producto.Nombre)));
+                    table.AddCell(new PdfPCell(new Phrase(producto.Precio.ToString())));
+                    table.AddCell(new PdfPCell(new Phrase(producto.StockTienda.ToString())));
+                    table.AddCell(new PdfPCell(new Phrase((producto.Precio * producto.StockTienda).ToString())));
+
+                    totalStock += producto.StockTienda;
+                }
+
+                document.Add(table);
+
+                document.Add(Chunk.NEWLINE);
+
+                Paragraph totalStockParagraph = new Paragraph($"Stock Total: {totalStock}", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+                document.Add(totalStockParagraph);
 
                 document.Close();
                 writer.Close();

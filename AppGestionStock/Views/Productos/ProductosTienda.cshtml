@@ -4,81 +4,84 @@
     ViewData["Title"] = "ProductosTienda";
 }
 
-<h1>ProductosTienda</h1>
+<h1 class="text-center">Productos en Tienda</h1>
 
-<p>
-    <a asp-action="CrearProducto">Create New</a>
-</p>
-
-<form method="post">
-    <input type="hidden" name="idTienda" value="1" />
-    <button type="submit">Mostrar Productos tienda 1</button>
+<form id="tiendaForm" method="post">
+    <div class="form-group">
+        <select name="idTienda" id="idTienda" class="form-control" asp-items="ViewBag.Tiendas"></select>
+    </div>
 </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Coste)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdCategoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Imagen)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdTienda)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StockTienda)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Coste)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdCategoria)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Imagen)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdTienda)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StockTienda)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<a id="generarPdfStock" class="btn btn-secondary disabled">Generar PDF de Stock</a>
+
+<div id="productosContainer" class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="~/images/Productos/@item.Imagen" class="card-img-top" alt="@item.Nombre" style="max-height: 200px; object-fit: contain;">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nombre</h5>
+                    <p class="card-text">
+                        <strong>Precio:</strong> @item.Precio<br />
+                        <strong>Coste:</strong> @item.Coste<br />
+                        <strong>Categoría:</strong> @item.IdCategoria<br />
+                        <strong>Stock:</strong> @item.StockTienda <br />
+                        <strong>Tienda:</strong> @item.IdTienda
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="UpdateProducto" asp-route-idProducto="@item.IdProducto" class="btn btn-sm btn-primary"><i data-lucide="pencil"></i></a>
+                        <a asp-action="Details" asp-route-id="@item.IdProducto" class="btn btn-sm btn-info">Detalles</a>
+                        <a asp-action="EliminarProducto" asp-route-idProducto="@item.IdProducto" class="btn btn-sm btn-danger"><i data-lucide="trash-2"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const generarPdfStockBtn = document.getElementById('generarPdfStock');
+        const idTiendaSelect = document.getElementById('idTienda');
+
+        function actualizarEstadoBoton() {
+            const tiendaId = parseInt(idTiendaSelect.value);
+            if (tiendaId === 0) {
+                generarPdfStockBtn.classList.add('disabled', 'btn-secondary');
+                generarPdfStockBtn.classList.remove('btn-primary');
+            } else {
+                generarPdfStockBtn.classList.remove('disabled', 'btn-secondary');
+                generarPdfStockBtn.classList.add('btn-primary');
+            }
+        }
+
+        actualizarEstadoBoton();
+
+        idTiendaSelect.addEventListener('change', function() {
+            actualizarEstadoBoton();
+            console.log('Evento change disparado');
+            let idTienda = this.value;
+            console.log('ID de tienda:', idTienda);
+
+            fetch('/Reportes/ProductosTienda?idTienda=' + idTienda, {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = data;
+                let newProducts = tempDiv.querySelector('#productosContainer').innerHTML;
+                document.getElementById('productosContainer').innerHTML = newProducts;
+                lucide.createIcons();
+            });
+        });
+
+        generarPdfStockBtn.addEventListener('click', function() {
+            const tiendaId = parseInt(idTiendaSelect.value);
+            if (tiendaId !== 0) {
+                window.location.href = '/Productos/GenerarPdfStock?idTienda=' + tiendaId;
+            }
+        });
+    });
+</script>

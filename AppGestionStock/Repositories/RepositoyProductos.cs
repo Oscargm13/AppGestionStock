@@ -31,6 +31,13 @@ namespace AppGestionStock.Repositories
             return await consulta.ToListAsync();
         }
 
+        public List<VistaProductoTienda> GetAllVistaProductosTienda()
+        {
+            var consulta = from datos in this.context.VistaProductosTienda
+                           select datos;
+            return consulta.ToList();
+        }
+
         public List<VistaProductoTienda> GetVistaProductosTienda(int idTienda)
         {
             var consulta = from datos in this.context.VistaProductosTienda
