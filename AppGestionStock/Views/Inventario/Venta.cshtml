@@ -7,8 +7,98 @@
 @{
     List<VistaProductoTienda> productos = (List<VistaProductoTienda>)ViewData["PRODUCTOS"];
 }
+<style>
+    .custom-label {
+        font-weight: 500;
+        color: #333;
+    }
 
-<h1 class="text-center mb-3">Registrar Venta</h1>
+    .custom-input, .custom-select {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .custom-btn {
+        background-color: #007bff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        color: white;
+    }
+
+        .custom-btn:hover {
+            background-color: #0056b3;
+        }
+
+    .custom-title {
+        color: #007bff;
+        font-weight: 600;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .custom-select {
+        padding: 8px 12px;
+        font-size: 16px;
+        height: auto;
+    }
+
+    .btn-container {
+        display: flex; /* Usamos flexbox */
+        justify-content: center; /* Centramos los botones horizontalmente */
+        align-items: center; /* Alineamos los botones verticalmente */
+        gap: 10px; /* Separación entre los botones (opcional) */
+    }
+
+    /* Aplicamos estilos a los botones dentro del contenedor */
+    .btn-secondary,
+    .btn-primary {
+        background-color: #6c757d; /* Color gris para "Agregar Nuevo Producto" */
+        border-color: #6c757d;
+        color: white; /* Asegurar que el texto sea blanco */
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d; /* Color gris para "Agregar Nuevo Producto" */
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #545b62; /* Ligeramente más oscuro al pasar el ratón */
+            border-color: #545b62;
+        }
+
+    /* Mantener el estilo del botón primary (Registrar Venta) */
+    .btn-primary {
+        background-color: #007bff; /* Color azul para "Registrar Venta" */
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .custom-title {
+        color: #007bff;
+        font-weight: 600;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+</style>
+
+<h1 class="text-center mb-4">Registrar Venta</h1>
 
 @if (ViewBag.MensajeExito != null)
 {
@@ -20,20 +110,20 @@
 }
 else
 {
-    <div class="container mt-3">
+    <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card shadow">
+                <div class="card shadow rounded p-4" style="border: 1px solid #ddd;">
                     <div class="card-body">
                         <form asp-action="Venta" method="post" id="ventaForm">
                             <div id="paso1">
                                 <div class="form-group mb-3">
-                                    <label asp-for="FechaVenta" class="form-label">Fecha de Venta:</label>
-                                    <input asp-for="FechaVenta" class="form-control" />
+                                    <label asp-for="FechaVenta" class="form-label custom-label">Fecha de Venta:</label>
+                                    <input asp-for="FechaVenta" class="form-control custom-input" />
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label asp-for="IdTienda" class="form-label">ID de Tienda:</label>
-                                    <select asp-for="IdTienda" class="form-control">
+                                    <label asp-for="IdTienda" class="form-label custom-label">ID de Tienda:</label>
+                                    <select asp-for="IdTienda" class="form-control custom-select">
                                         <option value="">Seleccione una tienda</option>
                                         @foreach (var tienda in (List<Tienda>)ViewData["TIENDAS"])
                                         {
@@ -42,20 +132,19 @@ else
                                     </select>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label asp-for="IdCliente" class="form-label">ID de Cliente:</label>
-                                    <input asp-for="IdCliente" class="form-control" />
+                                    <label asp-for="IdCliente" class="form-label custom-label">ID de Cliente:</label>
+                                    <input asp-for="IdCliente" class="form-control custom-input" />
                                 </div>
-
-                                <button type="submit" name="siguientePaso" value="true" class="btn btn-primary">Siguiente</button>
+                                <button type="submit" name="siguientePaso" value="true" class="btn btn-primary custom-btn">Siguiente</button>
                             </div>
 
                             <div id="paso2" style="display: none;">
-                                <h2 class="mb-3">Detalles de Venta</h2>
+                                <h2 class="mb-4 custom-title">Detalles de Venta</h2>
                                 <div id="detallesVenta">
-                                    <div class="detalleVenta mb-4 p-3 border rounded" id="detalleActual">
+                                    <div class="detalleVenta mb-4 p-3 border rounded" id="detalleActual" style="background-color: #f8f9fa;">
                                         <div class="form-group mb-3">
-                                            <label class="form-label">ID de Producto:</label>
-                                            <select id="idProducto" class="form-control">
+                                            <label class="form-label custom-label">ID de Producto:</label>
+                                            <select id="idProducto" class="form-control custom-select">
                                                 <option value="">Seleccione un producto</option>
                                                 @if (productos != null)
                                                 {
@@ -65,22 +154,20 @@ else
                                                     }
                                                 }
                                             </select>
-                                            <span id="stockDisponible" style="margin-left: 10px; margin-top: 2px; color: darkorange"></span>
+                                            <span id="stockDisponible" style="margin-left: 10px; margin-top: 2px; color: darkorange;"></span>
                                         </div>
                                         <div class="form-group mb-3">
-                                            <label class="form-label">Cantidad:</label>
-                                            <input type="number" id="cantidad" class="form-control" />
+                                            <label class="form-label custom-label">Cantidad:</label>
+                                            <input type="number" id="cantidad" class="form-control custom-input" />
                                         </div>
                                         <div class="form-group mb-3">
-                                            <label class="form-label">Precio Unitario:</label>
-                                            <input type="number" step="0.01" id="precioUnidad" class="form-control" />
+                                            <label class="form-label custom-label">Precio Unitario:</label>
+                                            <input type="number" step="0.01" id="precioUnidad" class="form-control custom-input" />
                                         </div>
                                     </div>
                                 </div>
-
-                                <button type="button" id="agregarProducto" class="btn btn-secondary mb-4">Agregar Nuevo Producto</button>
-                                <button type="submit" class="btn btn-primary" id="registrarVenta">Registrar Venta</button>
-
+                                <button type="button" id="agregarProducto" class="btn btn-secondary custom-btn mb-4">Agregar Nuevo Producto</button>
+                                <button type="submit" class="btn btn-primary custom-btn" id="registrarVenta">Registrar Venta</button>
                                 <input type="hidden" asp-for="IdTienda" />
                                 <input type="hidden" asp-for="FechaVenta" />
                                 <input type="hidden" asp-for="IdCliente" />
@@ -92,9 +179,9 @@ else
         </div>
     </div>
 }
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    let detalles = []; // Lista para almacenar los detalles de venta
+        let detalles = []; // Lista para almacenar los detalles de venta
 
     document.getElementById('idProducto').addEventListener('change', function() {
         let precio = parseFloat(this.options[this.selectedIndex].getAttribute('data-precio'));
@@ -137,6 +224,9 @@ else
         document.getElementById('idProducto').value = '';
         document.getElementById('cantidad').value = '';
         document.getElementById('precioUnidad').value = '';
+
+        // Limpiar el stock disponible
+        document.getElementById('stockDisponible').textContent = '';
     });
 
     document.getElementById('registrarVenta').addEventListener('click', function() {

@@ -56,7 +56,6 @@
                     {
                         <a class="dropdown-item notificacion-item" href="#">
                             @notificacion.Mensaje - @notificacion.Fecha
-                            <i class="eliminar-notificacion" data-id="@notificacion.IdNotificacion" data-lucide="trash-2" style="color: red; cursor: pointer;"></i>
                         </a>
                     }
                 }
@@ -137,11 +136,11 @@
                                 <p class="card-text">
                                     @if (movimiento.TipoMovimiento == "Salida")
                                     {
-                                        <span>Salida: @movimiento.Cantidad unidades de Producto @movimiento.IdProducto.</span>
+                                        <span>Salida: @movimiento.Cantidad unidades de Producto @movimiento.NombreProducto.</span>
                                     }
                                     else if (movimiento.TipoMovimiento == "Entrada")
                                     {
-                                        <span>Entrada: @movimiento.Cantidad unidades de Producto @movimiento.IdProducto.</span>
+                                        <span>Entrada: @movimiento.Cantidad unidades de Producto @movimiento.NombreProducto.</span>
                                     }
                                     else
                                     {

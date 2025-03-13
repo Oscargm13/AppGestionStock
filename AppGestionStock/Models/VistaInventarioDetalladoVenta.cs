@@ -79,7 +79,7 @@ namespace AppGestionStock.Models
         public int? IdTienda { get; set; }
 
         [Column("NombreTienda")]
-        public string NombreTienda { get; set; }
+        public string? NombreTienda { get; set; }
 
         public Producto Producto { get; set; }
     }
