@@ -24,18 +24,38 @@ namespace AppGestionStock.Controllers
             return View(movimientos);
         }
 
-        public async Task<IActionResult> GenerarPdf()
+        public async Task<IActionResult> GenerarPdf(string periodo)
         {
-            // Obtener los datos de los productos
+            // Calcular la fecha de inicio según el periodo seleccionado
+            DateTime fechaInicio = DateTime.Now.Date;
+
+            if (periodo == "dia")
+            {
+                fechaInicio = DateTime.Now.Date.AddDays(-1);
+            }
+            else if (periodo == "semana")
+            {
+                fechaInicio = DateTime.Now.Date.AddDays(-7);
+            }
+            else if (periodo == "mes")
+            {
+                fechaInicio = DateTime.Now.Date.AddMonths(-1);
+            }
+
+            // Obtener los movimientos dentro del rango de fechas
             List<VistaInventarioDetalladoVenta> movimientos = await repo.GetMovimientos();
+            movimientos = movimientos
+                .Where(m => m.FechaMovimiento >= fechaInicio)
+                .ToList();
 
             // Generar el PDF
             byte[] pdfBytes = GenerarPdfBytes(movimientos);
 
-            // Devolver el PDF como un archivo descargable
-            string fechaEmision = DateTime.Now.ToString("dd_MM_yyyy_HHmmss"); // Formato de fecha para el nombre del archivo
-            return File(pdfBytes, "application/pdf", $"Reporte_inventario_{fechaEmision}.pdf");
+            // Nombre del archivo con el periodo
+            string fechaEmision = DateTime.Now.ToString("dd_MM_yyyy_HHmmss");
+            return File(pdfBytes, "application/pdf", $"Reporte_{periodo}_{fechaEmision}.pdf");
         }
+
 
         private byte[] GenerarPdfBytes(List<VistaInventarioDetalladoVenta> movimientos)
         {

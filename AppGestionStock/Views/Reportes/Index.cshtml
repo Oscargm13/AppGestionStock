@@ -1,10 +1,4 @@
-﻿@model List<VistaInventarioDetalladoVenta>
-
-@{
-    ViewData["Title"] = "Lista de Movimientos de Inventario";
-}
-
-<h1>Lista de Movimientos de Inventario</h1>
+﻿<h1>Lista de Movimientos de Inventario</h1>
 
 <table class="table">
     <thead>
@@ -32,4 +26,7 @@
     </tbody>
 </table>
 
-<a asp-controller="Reportes" asp-action="GenerarPdf" class="btn btn-primary">Generar Informe PDF</a>
+<h3>Generar Reporte PDF</h3>
+<a asp-controller="Reportes" asp-action="GenerarPdf" asp-route-periodo="dia" class="btn btn-primary">Último Día</a>
+<a asp-controller="Reportes" asp-action="GenerarPdf" asp-route-periodo="semana" class="btn btn-primary">Últimos 7 Días</a>
+<a asp-controller="Reportes" asp-action="GenerarPdf" asp-route-periodo="mes" class="btn btn-primary">Último Mes</a>

@@ -61,10 +61,11 @@ else
                                                 {
                                                     @foreach (var producto in productos)
                                                     {
-                                                        <option value="@producto.IdProducto" data-precio="@producto.Precio.ToString(System.Globalization.CultureInfo.InvariantCulture)">@producto.Nombre</option>
+                                                        <option value="@producto.IdProducto" data-precio="@producto.Precio.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-stock="@producto.StockTienda">@producto.Nombre</option>
                                                     }
                                                 }
                                             </select>
+                                            <span id="stockDisponible" style="margin-left: 10px; margin-top: 2px; color: darkorange"></span>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label class="form-label">Cantidad:</label>
@@ -97,10 +98,25 @@ else
 
     document.getElementById('idProducto').addEventListener('change', function() {
         let precio = parseFloat(this.options[this.selectedIndex].getAttribute('data-precio'));
+        let stock = parseInt(this.options[this.selectedIndex].getAttribute('data-stock'));
         if (!isNaN(precio)) {
-            document.getElementById('precioUnidad').value = precio.toFixed(2); // Mostrar siempre 2 decimales
+            document.getElementById('precioUnidad').value = precio.toFixed(2);
         } else {
             document.getElementById('precioUnidad').value = '';
+        }
+        if (!isNaN(stock)) {
+            document.getElementById('stockDisponible').textContent = `Stock: ${stock}`;
+            document.getElementById('cantidad').max = stock;
+        } else {
+            document.getElementById('stockDisponible').textContent = '';
+            document.getElementById('cantidad').max = '';
+        }
+    });
+
+    document.getElementById('cantidad').addEventListener('input', function() {
+        let stock = parseInt(document.getElementById('idProducto').options[document.getElementById('idProducto').selectedIndex].getAttribute('data-stock'));
+        if (this.value > stock) {
+            this.value = stock;
         }
     });
 

@@ -34,6 +34,7 @@ namespace AppGestionStock.Data
         public DbSet<DetallesVenta> DetallesVenta { get; set; }
         public DbSet<VistaInventarioDetalladoVenta> vistaInventarioDetalladoVenta {get; set; }
         public DbSet<Venta> Ventas { get; set; }
+        public DbSet<Compra> Compras { get; set; }
 
         //PROVEEDORES
         public DbSet<Proveedor> Proveedores { get; set; }

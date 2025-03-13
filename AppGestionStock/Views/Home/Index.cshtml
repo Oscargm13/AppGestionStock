@@ -54,10 +54,12 @@
 
         // Obtener datos de ViewData
         const meses = @Html.Raw(Json.Serialize(ViewData["MESES"]));
-        const montos = @Html.Raw(Json.Serialize(ViewData["MONTOS"]));
+        const montosVentas = @Html.Raw(Json.Serialize(ViewData["MONTOS_VENTAS"]));
+        const montosCompras = @Html.Raw(Json.Serialize(ViewData["MONTOS_COMPRAS"]));
 
         console.log("Meses:", meses);
-        console.log("Montos:", montos);
+        console.log("Ventas:", montosVentas);
+        console.log("Compras:", montosCompras);
 
         // Construir etiquetas de los meses en español
         const labels = meses.map(mes => {
@@ -69,13 +71,22 @@
             type: 'bar',
             data: {
                 labels: labels,
-                datasets: [{
-                    label: 'Ventas Mensuales',
-                    data: montos,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
+                datasets: [
+                    {
+                        label: 'Ventas Mensuales',
+                        data: montosVentas,
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Compras Mensuales',
+                        data: montosCompras,
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
             },
             options: {
                 responsive: true,

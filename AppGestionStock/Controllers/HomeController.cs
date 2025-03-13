@@ -22,7 +22,8 @@ namespace AppGestionStock.Controllers
         public async Task<IActionResult> Index()
         {
             // Cálculo del stock total
-            int stockTotalGerente = this.repoProductos.GetTotalStockGerente(HttpContext.Session.GetObject<Usuario>("USUARIO").IdUsuario);
+            var usuario = HttpContext.Session.GetObject<Usuario>("USUARIO");
+            int stockTotalGerente = this.repoProductos.GetTotalStockGerente(usuario.IdUsuario);
             ViewData["STOCKTOTAL"] = stockTotalGerente;
 
             // Cálculo de los ingresos mensuales
@@ -33,52 +34,44 @@ namespace AppGestionStock.Controllers
             ViewData["MESACTUAL"] = mesActual;
             ViewData["AÑOACTUAL"] = añoActual;
 
-            // Obtener la lista de inventario
+            // Obtener la lista de movimientos de inventario y almacenarlos en la sesión
             List<VistaInventarioDetalladoVenta> inventario = await this.repoInventario.GetMovimientos();
             HttpContext.Session.SetObject("INVENTARIO", inventario);
 
-            //OBTENER NOTIFICACIONES EN CASO DE HABERLAS
+            // Obtener notificaciones en caso de haberlas
             List<Notificacion> notificaciones = await repoInventario.GetNotificaciones();
             ViewData["NOTIFICACIONES"] = notificaciones;
 
+            // Obtener ventas y compras
             List<Venta> ventas = await this.repoInventario.GetVentas();
+            List<Compra> compras = await this.repoInventario.GetCompras();
 
-            // Agrupar ventas por mes y calcular el total de montos
+            // Agrupar ventas por mes
             var ventasMensuales = ventas
-        .GroupBy(v => v.FechaVenta.Month)
-        .Select(g => new { Mes = g.Key, Total = g.Sum(v => v.ImporteTotal) })
-        .OrderBy(g => g.Mes)
-        .ToList();
+                .GroupBy(v => v.FechaVenta.Month)
+                .Select(g => new { Mes = g.Key, Total = g.Sum(v => v.ImporteTotal) })
+                .OrderBy(g => g.Mes)
+                .ToList();
 
-            // Imprimir ventasMensuales
-            Console.WriteLine("ventasMensuales:");
-            foreach (var venta in ventasMensuales)
-            {
-                Console.WriteLine($"Mes: {venta.Mes}, Total: {venta.Total}");
-            }
+            // Agrupar compras por mes
+            var comprasMensuales = compras
+                .GroupBy(c => c.FechaCompra.Month)
+                .Select(g => new { Mes = g.Key, Total = g.Sum(c => c.ImporteTotal) })
+                .OrderBy(g => g.Mes)
+                .ToList();
 
+            // Obtener listas de meses, montos de ventas y compras
             List<int> meses = ventasMensuales.Select(v => v.Mes).ToList();
-            List<decimal> montos = ventasMensuales.Select(v => v.Total).ToList();
-
-            // Imprimir meses
-            Console.WriteLine("\nMeses:");
-            foreach (var mes in meses)
-            {
-                Console.WriteLine(mes);
-            }
-
-            // Imprimir montos
-            Console.WriteLine("\nMontos:");
-            foreach (var monto in montos)
-            {
-                Console.WriteLine(monto);
-            }
+            List<decimal> montosVentas = ventasMensuales.Select(v => v.Total).ToList();
+            List<decimal> montosCompras = comprasMensuales.Select(c => c.Total).ToList();
 
             ViewData["MESES"] = meses;
-            ViewData["MONTOS"] = montos;
+            ViewData["MONTOS_VENTAS"] = montosVentas;
+            ViewData["MONTOS_COMPRAS"] = montosCompras;
 
             return View();
         }
+
 
         public IActionResult Privacy()
         {

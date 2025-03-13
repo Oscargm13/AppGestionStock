@@ -18,20 +18,27 @@ namespace AppGestionStock.Models
         [Column("IdProveedor")]
         public int IdProveedor { get; set; }
 
+        [ForeignKey("IdProveedor")]  // 🔹 Indica que la FK real es "IdProveedor"
+        public Proveedor Proveedor { get; set; }
+
         [Required(ErrorMessage = "La tienda es obligatoria")]
         [Column("IdTienda")]
         public int IdTienda { get; set; }
 
+        [ForeignKey("IdTienda")]  // 🔹 Indica que la FK real es "IdTienda"
+        public Tienda Tienda { get; set; }
+
         [Column("IdUsuario")]
         public int? IdUsuario { get; set; }  // Puede ser nullable si no es obligatorio
+
+        [ForeignKey("IdUsuario")]  // 🔹 Indica que la FK real es "IdUsuario"
+        public Usuario Usuario { get; set; }
 
         [Required(ErrorMessage = "El importe total es obligatorio")]
         [Column("ImporteTotal")]
         public decimal ImporteTotal { get; set; }
 
-        public Proveedor Proveedor { get; set; }
-        public Tienda Tienda { get; set; }
-        public Usuario Usuario { get; set; }  // Agregar esta propiedad de navegación
         public ICollection<DetallesCompra> DetallesCompras { get; set; }
     }
+
 }

@@ -188,56 +188,6 @@ namespace AppGestionStock.Repositories
             }
         }
 
-        //public async Task ProcesarVenta(Venta venta, List<DetallesVenta> detalles)
-        //{
-        //    using (var connection = context.Database.GetDbConnection())
-        //    {
-        //        await connection.OpenAsync();
-        //        using (var transaction = connection.BeginTransaction())
-        //        {
-        //            try
-        //            {
-        //                using (var command = connection.CreateCommand())
-        //                {
-        //                    command.Transaction = transaction;
-        //                    command.CommandText = "ProcesarVenta";
-        //                    command.CommandType = CommandType.StoredProcedure;
-
-        //                    // Parámetros de la venta
-        //                    command.Parameters.Add(new SqlParameter("@FechaVenta", venta.FechaVenta));
-        //                    command.Parameters.Add(new SqlParameter("@IdTienda", venta.IdTienda));
-        //                    command.Parameters.Add(new SqlParameter("@IdUsuario", venta.IdUsuario));
-        //                    command.Parameters.Add(new SqlParameter("@ImporteTotal", venta.ImporteTotal));
-        //                    command.Parameters.Add(new SqlParameter("@IdCliente", venta.IdCliente));
-
-        //                    // Crear XML para los detalles de venta
-        //                    var detallesXml = new XElement("Detalles",
-        //                        detalles.Select(d => new XElement("Detalle",
-        //                            new XElement("IdProducto", d.IdProducto),
-        //                            new XElement("Cantidad", d.Cantidad),
-        //                            new XElement("PrecioUnidad", d.PrecioUnidad)
-        //                        ))
-        //                    );
-
-        //                    // Parámetro XML para los detalles de venta
-        //                    command.Parameters.Add(new SqlParameter("@DetallesVenta", detallesXml.ToString()));
-
-        //                    // Ejecutar el comando
-        //                    await command.ExecuteNonQueryAsync();
-        //                    command.Parameters.Clear();
-        //                }
-        //                transaction.Commit();
-        //            }
-        //            catch (Exception)
-        //            {
-        //                transaction.Rollback();
-        //                throw; // Re-lanza la excepción para que se maneje en la capa superior
-        //            }
-        //        }
-        //        await connection.CloseAsync();
-        //    }
-        //}
-
         public async Task ProcesarCompra(Compra compra, List<DetallesCompra> detalles)
         {
             using (var connection = context.Database.GetDbConnection())
@@ -318,6 +268,11 @@ namespace AppGestionStock.Repositories
         public async Task<List<Venta>> GetVentas()
         {
             return await context.Ventas.ToListAsync();
+        }
+        
+        public async Task<List<Compra>> GetCompras()
+        {
+            return await context.Compras.ToListAsync();
         }
     }
 }
