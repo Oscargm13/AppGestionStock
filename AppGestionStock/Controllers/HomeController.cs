@@ -25,7 +25,7 @@ namespace AppGestionStock.Controllers
         public async Task<IActionResult> Index()
         {
             //Calculo de clientes
-            List<Cliente> clientes = this.repoClientes.GetClientes();
+            List<Cliente> clientes = await this.repoClientes.GetClientes();
             int numeroClientes = clientes.Count();
             ViewData["NUMEROCLIENTES"] = numeroClientes;
 

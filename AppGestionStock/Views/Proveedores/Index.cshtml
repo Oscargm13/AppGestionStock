@@ -1,0 +1,38 @@
+﻿@model List<Proveedor>
+
+@{
+    ViewData["Title"] = "Proveedores";
+}
+
+<div class="container">
+    <h2>Proveedores</h2>
+
+    <a asp-action="ProveedorCreate" class="btn btn-primary">Crear Nuevo Proveedor</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre Empresa</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Nombre Contacto</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var proveedor in Model)
+            {
+                <tr>
+                    <td>@proveedor.NombreEmpresa</td>
+                    <td>@proveedor.Telefono</td>
+                    <td>@proveedor.Email</td>
+                    <td>@proveedor.NombreContacto</td>
+                    <td>
+                        <a asp-action="ProveedorEdit" asp-route-id="@proveedor.IdProveedor" class="btn btn-sm btn-warning">Editar</a>
+                        <a asp-action="ProveedorDelete" asp-route-id="@proveedor.IdProveedor" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

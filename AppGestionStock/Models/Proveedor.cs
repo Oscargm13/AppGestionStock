@@ -31,7 +31,7 @@ namespace AppGestionStock.Models
         [Column("Direccion")]
         public string Direccion { get; set; }
 
-        public ICollection<ProductoProveedor> ProductosProveedores { get; set; }
-        public ICollection<Compra> Compras { get; set; }
+        //public ICollection<ProductoProveedor> ProductosProveedores { get; set; }
+        //public ICollection<Compra> Compras { get; set; }
     }
 }

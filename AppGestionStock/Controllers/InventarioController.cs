@@ -281,7 +281,7 @@ namespace AppGestionStock.Controllers
 
         public async Task<IActionResult> Compra()
         {
-            List<Proveedor> proveedores = repoClientes.GetProveedores();
+            List<Proveedor> proveedores = await repoClientes.GetProveedores();
             List<Tienda> tiendas = repoTiendas.GetTiendas();
 
             ViewData["PROVEEDORES"] = proveedores;

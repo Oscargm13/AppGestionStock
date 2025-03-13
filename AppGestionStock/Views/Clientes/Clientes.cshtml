@@ -1,0 +1,48 @@
+﻿@model List<AppGestionStock.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Clientes";
+}
+
+<div class="container">
+    <h2>Clientes</h2>
+
+    <a asp-action="Create" class="btn btn-primary">Crear Nuevo Cliente</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cliente in Model)
+            {
+                <tr>
+                    <td>@cliente.Nombre</td>
+                    <td>@cliente.Apellido</td>
+                    <td>@cliente.Email</td>
+                    <td>@cliente.Telefono</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@cliente.IdCliente" class="btn btn-sm btn-warning">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@cliente.IdCliente" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.delete-btn').click(function () {
+            var id = $(this).data('id');
+            $('#confirmDeleteButton').attr('href', '/Clientes/Delete/' + id);
+            $('#deleteModal').modal('show');
+        });
+    });
+</script>

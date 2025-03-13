@@ -64,7 +64,7 @@
             let idTienda = this.value;
             console.log('ID de tienda:', idTienda);
 
-            fetch('/Reportes/ProductosTienda?idTienda=' + idTienda, {
+            fetch('/Productos/ProductosTienda?idTienda=' + idTienda, {
                 method: 'POST'
             })
             .then(response => response.text())
@@ -80,7 +80,7 @@
         generarPdfStockBtn.addEventListener('click', function() {
             const tiendaId = parseInt(idTiendaSelect.value);
             if (tiendaId !== 0) {
-                window.location.href = '/Productos/GenerarPdfStock?idTienda=' + tiendaId;
+                window.location.href = '/Reportes/GenerarPdfStock?idTienda=' + tiendaId;
             }
         });
     });
