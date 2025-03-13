@@ -7,8 +7,8 @@
     <div class="card-row">
         <div class="earnings-card" style="border-left: 7px solid #D3D3D3;">
             <div class="earnings-content">
-                <div class="earnings-title">New Users</div>
-                <div class="earnings-amount">2,356</div>
+                <div class="earnings-title">Clientes actuales</div>
+                <div class="earnings-amount">@ViewData["NUMEROCLIENTES"]</div>
             </div>
             <div class="earnings-icon">
                 <i data-lucide="user-plus"></i>
@@ -103,7 +103,7 @@
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return value.toLocaleString(); // Formato de números
+                                return value.toLocaleString();
                             }
                         }
                     }
