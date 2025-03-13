@@ -9,6 +9,8 @@
     margin-bottom: 20px;
     padding: 20px;
     background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-title {
@@ -53,83 +55,55 @@ hr {
     align-items: center;
     justify-content: space-between;
     background-color: #FFFFFF;
-    height: 80px; /* Aumentado el alto */
+    height: 80px;
 }
 
 .earnings-content {
     flex-grow: 1;
-    text-align: center; /* Centrado del contenido */
+    text-align: center;
 }
 
 .earnings-title {
-    font-size: 1.1em; /* Ligeramente aumentado el tamaño de la fuente */
+    font-size: 1.1em;
     color: #333;
     margin-bottom: 5px;
 }
 
 .earnings-amount {
-    font-size: 2em; /* Aumentado el tamaño de la fuente */
+    font-size: 2em;
     font-weight: bold;
     color: #28a745;
 }
 
 .earnings-icon {
-    font-size: 3em; /* Aumentado el tamaño del icono */
+    font-size: 3em;
     color: #ccc;
 }
 
 .card-row {
     display: flex;
-    justify-content: center; /* Centrado de las tarjetas */
+    justify-content: center;
     margin-bottom: 20px;
-    gap: 25px; /* Ligeramente aumentado el espacio entre tarjetas */
+    gap: 25px;
 }
 
     .card-row .earnings-card {
-        width: 280px; /* Ancho fijo para mayor control */
+        width: 280px;
     }
-
 
 .chart-card {
     width: 100%;
-    display: flex;
-    align-items: center;
-}
-
-.chart-container {
-    width: 30%; /* Ajusta el ancho del gráfico */
-    padding: 20px;
-}
-
-.chart-text {
-    width: 70%; /* Ajusta el ancho del texto */
-    padding: 20px;
-}
-
-    .chart-text h5 {
-        margin-bottom: 10px;
-    }
-
-.legend-container {
-    justify-content: flex-start; /* Alinea la leyenda a la izquierda */
-}
-
-.chart-card {
-    width: 100%;
-    height: 80vh; /* Ocupar el 80% de la pantalla */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
 .chart-container {
     width: 100%;
-    height: 100%;
+    flex-grow: 1; /* Permitir que el contenedor del gráfico crezca y ocupe el espacio restante */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -140,6 +114,16 @@ canvas {
     height: 100% !important;
 }
 
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.chart-legends {
+    display: flex;
+}
 
 @media (max-width: 1290px) {
     .container .row {

@@ -3,6 +3,7 @@
 }
 @model ProductosTienda
 <link rel="stylesheet" href="~/css/estilosHome.css" asp-append-version="true" />
+
 <div class="container">
     <div class="card-row">
         <div class="earnings-card" style="border-left: 7px solid #D3D3D3;">
@@ -36,12 +37,18 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card chart-card" style="height: 60vh;">
-                <div class="chart-container" style="height: 100%;">
-                    <canvas id="ventasComprasChart"></canvas>
+                <div class="card-header">
+                    <div class="chart-legends">
+                        <span class="legend-item" style="background-color: rgba(75, 192, 192, 0.5); padding: 5px; margin-right: 10px;">Ventas Mensuales</span>
+                        <span class="legend-item" style="background-color: rgba(255, 99, 132, 0.5); padding: 5px;">Compras Mensuales</span>
+                    </div>
+                    <div class="chart-text">
+                        <h5>Ventas vs. Compras</h5>
+                        <p>Información detallada sobre ventas y compras...</p>
+                    </div>
                 </div>
-                <div class="chart-text">
-                    <h5>Ventas vs. Compras</h5>
-                    <p>Información detallada sobre ventas y compras...</p>
+                <div class="chart-container" style="height: 80%; width: 98%;">
+                    <canvas id="ventasComprasChart"></canvas>
                 </div>
             </div>
         </div>

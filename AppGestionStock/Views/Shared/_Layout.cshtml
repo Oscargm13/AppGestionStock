@@ -10,7 +10,7 @@
     <title>Dashboard - AppGestionStock</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/estilosLayout.css" asp-append-version="true" />
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -40,6 +40,9 @@
             <div class="user-info">
                 <img src="~/images/usuarios/@usuario.Imagen" alt="Usuario" />
                 <span>@usuario.Nombre</span>
+                <a asp-controller="Usuarios" asp-action="LogOut" style="margin-left: 10px;">
+                    <i data-lucide="log-out" style="color: red;"></i>
+                </a>
             </div>
         </nav>
 
@@ -73,7 +76,7 @@
         {
             <nav class="sidebar">
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a href="#"><i data-lucide="home"></i> <span>Dashboard</span></a></li>
+                    <li class="nav-item"><a asp-controller="Home" asp-action="Index"><i data-lucide="home"></i> <span>Dashboard</span></a></li>
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-toggle="collapse" href="#productosMenu" role="button">
                             <i data-lucide="package"></i> Productos
@@ -100,16 +103,18 @@
                             <a class="nav-link text-white" asp-controller="Inventario" asp-action="Compra">
                                 <i data-lucide="file-symlink"></i> Registrar compra
                             </a>
+
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#reportesMenu" role="button">
+                            <i data-lucide="bar-chart"></i> Reportes
+                        </a>
+                        <div class="collapse" id="reportesMenu">
                             <a class="nav-link text-white" asp-controller="Reportes" asp-action="Index">
                                 <i data-lucide="file-symlink"></i> Generar pdf
                             </a>
                         </div>
-                    </li>
-                    <li class="nav-item"><a href="#"><i data-lucide="bar-chart"></i> Reportes</a></li>
-                    <li>
-                        <a class="nav-link text-white" asp-controller="Usuarios" asp-action="LogOut">
-                            <i data-lucide="user"></i> Log out
-                        </a>
                     </li>
                 </ul>
             </nav>
