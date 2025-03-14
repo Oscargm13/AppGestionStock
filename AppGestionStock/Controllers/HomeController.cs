@@ -29,6 +29,7 @@ namespace AppGestionStock.Controllers
             int numeroClientes = clientes.Count();
             ViewData["NUMEROCLIENTES"] = numeroClientes;
 
+
             // Cálculo del stock total
             var usuario = HttpContext.Session.GetObject<Usuario>("USUARIO");
             int stockTotalGerente = this.repoProductos.GetTotalStockGerente(usuario.IdUsuario);
@@ -48,7 +49,8 @@ namespace AppGestionStock.Controllers
 
             // Obtener notificaciones en caso de haberlas
             List<Notificacion> notificaciones = await repoInventario.GetNotificaciones();
-            ViewData["NOTIFICACIONES"] = notificaciones;
+            //ViewData["NOTIFICACIONES"] = notificaciones;
+            HttpContext.Session.SetObject("NOTIFICACIONES", notificaciones);
 
             // Obtener ventas y compras
             List<Venta> ventas = await this.repoInventario.GetVentas();
